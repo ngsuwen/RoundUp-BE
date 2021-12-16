@@ -1,65 +1,24 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const mongoose = require('mongoose')
+require('dotenv').config();
 
 app.use(express.json());
 
-// to be stored in database
-let refreshTokens;
-let accessToken;
-let refreshToken;
+// const
+const PORT=process.env.PORT;
+const DATABASE=process.env.DATABASE;
+const MONGO_USER=process.env.MONGO_USER;
+const MONGO_PASSWORD=process.env.MONGO_PASSWORD;
+const MONGO_BASE_URL=process.env.MONGO_BASE_URL;
+const MONGO_URL=`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_URL}/${DATABASE}?retryWrites=true&w=majority`
 
-// dummy accounts, to be stored in database
-const accounts = [
-  {
-    username: "user1",
-    password: "password1",
-  },
-  {
-    username: "user2",
-    password: "password2",
-  },
-];
+// controllers
+const sessionController = require('./controller/sessionController')
+app.use('/user', sessionController)
 
-app.post("/login", (req, res) => {
-  const user = req.body.username;
-  const check = accounts.findIndex((account) => account.username === user);
-  // Authenticate User
-  if (check !== -1) {
-    accessToken = generateAccessToken(user);
-    refreshToken = generateRefreshToken(user);
-    // To be stored in database
-    refreshTokens = refreshToken;
-    res.send({ accessToken, refreshToken });
-  } else {
-    res.status(403).send("Forbidden");
-  }
-});
-
-// use refresh token
-app.post("/token", (req, res) => {
-  refreshToken = req.body.token;
-  if (refreshTokens.includes(refreshToken)) {
-    // get new tokens
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      accessToken = generateAccessToken(user.username);
-      refreshToken = generateRefreshToken(user.username);
-      refreshTokens = refreshToken;
-      res.send({ accessToken, refreshToken });
-    });
-  } else {
-    // expired
-    res.status(403).send("Forbidden");
-  }
-});
-
-function generateAccessToken(user) {
-  return jwt.sign({username: user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'});
-}
-
-function generateRefreshToken(user) {
-  return jwt.sign({username: user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '15s'});
-}
-
-app.listen(process.env.PORT);
+// connect to mongoose
+mongoose.connect(MONGO_URL).then(async()=>{
+  console.log('database connected')
+  app.listen(PORT, () => { console.log('listening on', PORT) });
+})

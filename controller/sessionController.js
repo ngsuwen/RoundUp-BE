@@ -26,10 +26,10 @@ router.post("/login", async (req, res) => {
       });
       res.send(tokens);
     } else {
-      res.status(400).send("invalid password");
+      res.status(400).send({"error":"invalid password"});
     }
   } else {
-    res.status(400).send("invalid user");
+    res.status(400).send({"error":"invalid user"});
   }
 });
 

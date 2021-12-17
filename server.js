@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 require('dotenv').config();
+// const seedData = require('./seedData')
 
 app.use(express.json());
 
@@ -20,5 +21,7 @@ app.use('/user', sessionController)
 // connect to mongoose
 mongoose.connect(MONGO_URL).then(async()=>{
   console.log('database connected')
+  // store test users
+  // await seedData();
   app.listen(PORT, () => { console.log('listening on', PORT) });
 })

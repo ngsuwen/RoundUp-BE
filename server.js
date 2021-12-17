@@ -16,7 +16,7 @@ const MONGO_URL=`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_URL}
 
 // controllers
 const sessionController = require('./controller/sessionController')
-app.use('/user', sessionController)
+app.use('/session', sessionController)
 
 // connect to mongoose
 mongoose.connect(MONGO_URL).then(async()=>{

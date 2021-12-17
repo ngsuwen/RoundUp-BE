@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+
+// schema
+const User = require('../models/user');
+const Token = require('../models/token');
 
 router.use(express.json());
 
@@ -9,30 +14,21 @@ let refreshTokens;
 let accessToken;
 let refreshToken;
 
-// dummy accounts, to be stored in database
-const accounts = [
-  {
-    username: "user1",
-    password: "password1",
-  },
-  {
-    username: "user2",
-    password: "password2",
-  },
-];
-
-router.post("/login", (req, res) => {
+router.post("/login", async(req, res) => {
   const user = req.body.username;
-  const check = accounts.findIndex((account) => account.username === user);
-  // Authenticate User
-  if (check !== -1) {
-    accessToken = generateAccessToken(user);
-    refreshToken = generateRefreshToken(user);
-    // To be stored in database
-    refreshTokens = refreshToken;
-    res.send({ accessToken, refreshToken });
+  const password = req.body.password
+  const isUserValid = await User.findOne({username: user});
+  // authenticate user
+  if (isUserValid) {
+    const isPasswordValid = await bcrypt.compare(password,isUserValid.password);
+    if (isPasswordValid){
+      const tokens = await Token.create({accessToken: generateAccessToken(user), refreshToken:generateRefreshToken(user)});
+      res.send(tokens);
+    } else {
+      res.status(400).send("invalid password");
+    }
   } else {
-    res.status(403).send("Forbidden");
+    res.status(403).send("invalid user");
   }
 });
 

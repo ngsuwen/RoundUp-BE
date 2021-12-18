@@ -2,24 +2,9 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 require('dotenv').config();
-const cors = require("cors")
+
 // const seedData = require('./seedData')
 
-const whitelist = [
-    "http://localhost:3000",
-    "https://expo.dev/@shizhenggg/RoundUp",
-  ];
-  const corsOptions = {
-    origin: (origin, callback) => {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  };
-
-app.use(cors(corsOptions)); 
 app.use(express.json());
 
 // const

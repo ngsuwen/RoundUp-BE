@@ -20,60 +20,85 @@ router.post("/login", async (req, res) => {
       isUserValid.password
     );
     if (isPasswordValid) {
-      const tokens = await Token.create({
-        accessToken: generateAccessToken(user),
-        refreshToken: generateRefreshToken(user),
+      // hide user
+      const hash = await bcrypt.hash(user, 10);
+      // generate tokens
+      const accessToken = generateAccessToken(hash);
+      const refreshToken = generateRefreshToken(hash);
+      // store refreshtoken in db
+      await Token.create({
+        username: await User.findOne({ username: user }),
+        refreshToken: refreshToken,
       });
-      res.send(tokens);
+      res.send({ accessToken: accessToken, refreshToken: refreshToken });
+      // error handling
     } else {
-      res.status(400).send({"error":"invalid password"});
+      res.status(400).send({ error: "invalid password" });
     }
   } else {
-    res.status(400).send({"error":"invalid user"});
+    res.status(400).send({ error: "invalid user" });
   }
 });
 
-// use refresh token
+// check tokens
 router.post("/token", async (req, res) => {
-  const refreshToken = req.body.token;
-  // check token with database
-  const isTokenValid = await Token.findOne({ refreshToken: refreshToken });
-  if (isTokenValid) {
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET,
-      async (err, user) => {
-        if (err) {
-          // expired
-          res.status(498).send("token expired");
-        } else {
-          // replace tokens
-          const tokens = await Token.findOneAndUpdate(
-            { refreshToken: refreshToken },
-            {
-              accessToken: generateAccessToken(user.username),
-              refreshToken: generateRefreshToken(user.username),
-            },
-            { new: true }
+  const accessToken = req.body.accessToken;
+  const refreshToken = req.body.refreshToken;
+  // check if accessToken is valid
+  jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET,
+    async (err, user) => {
+      if (err) {
+        // expired, check refresh token
+        // check token with database
+        const isTokenValid = await Token.findOne({
+          refreshToken: refreshToken,
+        });
+        if (isTokenValid) {
+          jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET,
+            async (err, user) => {
+              if (err) {
+                // refresh token expired
+                res.status(498).send("token expired");
+              } else {
+                // generate new tokens
+                const newAccessToken = generateAccessToken(user.username);
+                const newRefreshToken = generateRefreshToken(user.username);
+                // store refreshtoken in db
+                await Token.findOneAndUpdate({
+                  refreshToken: refreshToken
+                },{
+                  refreshToken: newRefreshToken,
+                });
+                res.send({
+                  accessToken: newAccessToken,
+                  refreshToken: newRefreshToken,
+                });
+              }
+            }
           );
-          res.send(tokens);
+        } else {
+          res.status(400).send("invalid token");
         }
+      } else {
+        res.status(200).send();
       }
-    );
-  } else {
-    res.status(400).send("invalid token");
-  }
+    }
+  );
 });
 
 function generateAccessToken(user) {
   return jwt.sign({ username: user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "10s",
+    expiresIn: "20s",
   });
 }
 
 function generateRefreshToken(user) {
   return jwt.sign({ username: user }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "10s",
+    expiresIn: "30s",
   });
 }
 

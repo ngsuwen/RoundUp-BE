@@ -2,8 +2,10 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const tokenSchema=new Schema({
-  accessToken: {
-    type: String,
+  username: {
+    // make reference to user
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   refreshToken:{

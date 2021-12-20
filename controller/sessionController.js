@@ -62,6 +62,8 @@ router.post("/token", async (req, res) => {
             async (err, user) => {
               if (err) {
                 // refresh token expired
+                // delete tokens from db
+                await Token.findOneAndDelete({refreshToken: refreshToken})
                 res.status(498).send("token expired");
               } else {
                 // generate new tokens

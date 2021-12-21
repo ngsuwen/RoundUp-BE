@@ -87,7 +87,10 @@ router.post("/token", async (req, res) => {
           res.status(401).send({ error: "invalid token"});
         }
       } else {
-        res.status(200).send();
+        res.status(200).send({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       }
     }
   );

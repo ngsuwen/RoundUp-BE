@@ -98,13 +98,13 @@ router.post("/token", async (req, res) => {
 
 function generateAccessToken(user) {
   return jwt.sign({ username: user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "10s",
+    expiresIn: "1d", // expires in 1day
   });
 }
 
 function generateRefreshToken(user) {
   return jwt.sign({ username: user }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "1m",
+    expiresIn: "14d", // expires in 14days
   });
 }
 

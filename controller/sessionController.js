@@ -33,10 +33,10 @@ router.post("/login", async (req, res) => {
       res.send({ accessToken: accessToken, refreshToken: refreshToken });
       // error handling
     } else {
-      res.status(400).send({ error: "invalid password" });
+      res.status(401).send({ error: "invalid password" });
     }
   } else {
-    res.status(400).send({ error: "invalid user" });
+    res.status(401).send({ error: "invalid user" });
   }
 });
 
@@ -51,6 +51,7 @@ router.post("/token", async (req, res) => {
     async (err, user) => {
       if (err) {
         // expired, check refresh token
+        // assuming there will be a refresh token
         // check token with database
         const isTokenValid = await Token.findOne({
           refreshToken: refreshToken,
@@ -62,9 +63,9 @@ router.post("/token", async (req, res) => {
             async (err, user) => {
               if (err) {
                 // refresh token expired
-                // delete tokens from db
+                // delete token from db
                 await Token.findOneAndDelete({refreshToken: refreshToken})
-                res.status(498).send("token expired");
+                res.status(401).send({ error: "token expired"});
               } else {
                 // generate new tokens
                 const newAccessToken = generateAccessToken(user.username);
@@ -83,7 +84,7 @@ router.post("/token", async (req, res) => {
             }
           );
         } else {
-          res.status(400).send("invalid token");
+          res.status(401).send({ error: "invalid token"});
         }
       } else {
         res.status(200).send();

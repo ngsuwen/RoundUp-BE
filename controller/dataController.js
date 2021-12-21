@@ -48,6 +48,49 @@ const DataCash = require("../models/data_cash")
 
 
 
+router.post("/cash/seed", async (req,res)=>{
+
+
+let cash = new DataCash({
+
+    username: "user1",
+    cashentry:[
+        {
+            date: Date.now,
+            amount: 1000,
+            category: "income",
+            description: "bonus"
+        },
+        {
+            date: Date.now,
+            amount: 100,
+            category: "savings",
+            description: "blue"
+        },
+        {
+            date: Date.now,
+            amount: 5,
+            category: "gift",
+            description: "green"
+        }
+    ]
+
+
+})
+
+try{
+    const seedItems =  await DataCash.create(cash)
+    res.send(seedItems)
+        } catch (err){
+            res.send(err.message)
+        }
+
+
+})
+
+
+
+
 // Routes
 // get all cash
 router.get("/cash", async (req,res)=>{

@@ -10,6 +10,41 @@ const DataExpense = require("../models/data_expenses")
 const category = ["Shopping", "Food", "Health", "Transportation", "Household"]
 const amount = ["100", "200", "300", "400", "500", "600", "700", "800"]
 const description = ["A", "B", "C", "D", "E", "F", "G", "H"]
+const date = ["2021-12-22T10:55:02.341+00:00", "2021-12-21T10:55:02.341+00:00","2021-12-20T10:55:02.341+00:00",
+              "2021-12-19T10:55:02.341+00:00", "2021-12-18T10:55:02.341+00:00","2021-12-17T10:55:02.341+00:00",
+              "2021-12-16T10:55:02.341+00:00", "2021-12-15T10:55:02.341+00:00","2021-12-14T10:55:02.341+00:00",
+            
+              "2021-12-13T10:55:02.341+00:00", "2021-12-12T10:55:02.341+00:00","2021-12-11T10:55:02.341+00:00",
+              "2021-12-10T10:55:02.341+00:00", "2021-12-09T10:55:02.341+00:00","2021-12-08T10:55:02.341+00:00",
+              "2021-12-07T10:55:02.341+00:00", "2021-12-06T10:55:02.341+00:00","2021-12-05T10:55:02.341+00:00",
+            
+              "2021-12-04T10:55:02.341+00:00", "2021-12-03T10:55:02.341+00:00","2021-12-02T10:55:02.341+00:00",
+              "2021-12-01T10:55:02.341+00:00", "2021-11-31T10:55:02.341+00:00","2021-11-30T10:55:02.341+00:00",
+              "2021-11-29T10:55:02.341+00:00", "2021-11-28T10:55:02.341+00:00","2021-11-27T10:55:02.341+00:00",
+
+              "2021-11-26T10:55:02.341+00:00", "2021-11-25T10:55:02.341+00:00","2021-11-24T10:55:02.341+00:00",
+              "2021-11-23T10:55:02.341+00:00", "2021-11-22T10:55:02.341+00:00","2021-11-21T10:55:02.341+00:00",
+              "2021-11-20T10:55:02.341+00:00", "2021-11-19T10:55:02.341+00:00","2021-11-18T10:55:02.341+00:00",
+
+              "2021-11-26T10:55:02.341+00:00", "2021-11-25T10:55:02.341+00:00","2021-11-24T10:55:02.341+00:00",
+              "2021-11-23T10:55:02.341+00:00", "2021-11-22T10:55:02.341+00:00","2021-11-21T10:55:02.341+00:00",
+              "2021-11-20T10:55:02.341+00:00", "2021-11-19T10:55:02.341+00:00","2021-11-18T10:55:02.341+00:00",
+
+              "2021-11-17T10:55:02.341+00:00", "2021-11-16T10:55:02.341+00:00","2021-11-15T10:55:02.341+00:00",
+              "2021-11-14T10:55:02.341+00:00", "2021-11-13T10:55:02.341+00:00","2021-11-12T10:55:02.341+00:00",
+              "2021-11-11T10:55:02.341+00:00", "2021-11-10T10:55:02.341+00:00","2021-11-09T10:55:02.341+00:00",
+
+              "2021-11-17T10:55:02.341+00:00", "2021-11-16T10:55:02.341+00:00","2021-11-15T10:55:02.341+00:00",
+              "2021-11-14T10:55:02.341+00:00", "2021-11-13T10:55:02.341+00:00","2021-11-12T10:55:02.341+00:00",
+              "2021-11-11T10:55:02.341+00:00", "2021-11-10T10:55:02.341+00:00","2021-11-09T10:55:02.341+00:00",
+            
+            ]
+
+
+
+// 2 months
+// 2 entries per day for 4 to 5 days
+// 
 
 // function formatDate(dateObject){
 //     const parts = {
@@ -47,7 +82,7 @@ router.post("/expense/seed", async(req,res)=>{
                 
 
                     try {
-                        
+                         const currDate = endDate.setDate(endDate.getDate()-1) // minusing once per loop
                          seedItems = await DataExpense.create({
     
                             username: await User.findOne({username: "user1" }),
@@ -56,24 +91,21 @@ router.post("/expense/seed", async(req,res)=>{
                                     amount: amount[Math.floor(Math.random() * amount.length)],
                                     category: category[Math.floor(Math.random() * category.length)],
                                     description: description[Math.floor(Math.random() * description.length)],
-                                   
-                                    date: endDate.setDate(endDate.getDate()-i)
+                                    date: currDate
                                     
                                 },
                                 {
                                     amount: amount[Math.floor(Math.random() * amount.length)],
                                     category: category[Math.floor(Math.random() * category.length)],
                                     description: description[Math.floor(Math.random() * description.length)],
-                                    
-                                    date: endDate.setDate(endDate.getDate()-i)
+                                    date: currDate
                                     
                                 },
                                 {
                                     amount: amount[Math.floor(Math.random() * amount.length)],
                                     category: category[Math.floor(Math.random() * category.length)],
                                     description: description[Math.floor(Math.random() * description.length)],
-                                    
-                                    date: endDate.setDate(endDate.getDate()-i)
+                                    date: currDate
                                     
                                 },
     

@@ -9,6 +9,7 @@ const dataExpensesSchema=new Schema({
   },
   expensesentry:[
     {
+      _id: false,
      date:{
         type: Date,
         default: Date.now,
@@ -28,6 +29,6 @@ const dataExpensesSchema=new Schema({
      }
     }
 ]
-})
+}, { timestamps: true })
 
 module.exports=mongoose.model('dataExpenses',dataExpensesSchema)

@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose')
 require('dotenv').config();
 
-// const seedData = require('./seedData')
+
 
 app.use(express.json());
 
@@ -22,8 +22,15 @@ app.use('/session', sessionController)
 const userController = require('./controller/userController')
 app.use('/user', userController)
 
-const dataController = require("./controller/dataController")
-app.use("/data", dataController)
+const dataCashController = require("./controller/dataCashController")
+app.use("/data", dataCashController)
+
+const dataExpenseController = require("./controller/dataExpenseController")
+app.use("/data", dataExpenseController)
+
+const seederExpenseController = require("./seed/expenseSeeder")
+app.use("/data", seederExpenseController)
+
 
 // connect to mongoose
 mongoose.connect(MONGO_URL).then(async()=>{

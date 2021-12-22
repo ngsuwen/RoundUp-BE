@@ -10,6 +10,7 @@ const dataInvestmentsSchema = new Schema({
   },
   investmentsentry: [
     {
+      _id: false,
       date: {
         type: Date,
         default: Date.now,

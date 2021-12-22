@@ -4,7 +4,9 @@ const bcrypt = require("bcrypt");
 
 // schema
 const User = require("../models/user");
+const Token = require("../models/token");
 
+// signup -> create new user
 router.post("/signup", async (req, res) => {
   const user = req.body.username;
   const password = req.body.password;
@@ -23,8 +25,18 @@ router.post("/signup", async (req, res) => {
     });
     res.send(userCreate);
   } catch (err) {
+    // username needs to be unique, if not will give error
     res.send({ error: err.message });
   }
+});
+
+// get userinfo
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const findToken = await Token.findOne({refreshToken: id})
+  const findUser = await User.findById(findToken.username)
+  // returns object with username, password and role
+  res.send(findUser)
 });
 
 router.post("/forloop", async (req, res) => {
@@ -40,7 +52,7 @@ router.post("/forloop", async (req, res) => {
       const hash = await bcrypt.hash(password, 10);
       const role = req.body.role;
       const userCreate = await User.create({
-        username: user+i,
+        username: user + i,
         password: hash,
         role: role,
       });
@@ -49,7 +61,7 @@ router.post("/forloop", async (req, res) => {
       res.send({ error: err.message });
     }
   }
-  res.send('forloop pass')
+  res.send("forloop pass");
 });
 
 module.exports = router;

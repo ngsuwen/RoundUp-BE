@@ -19,6 +19,9 @@ const MONGO_URL=`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_URL}
 const sessionController = require('./controller/sessionController')
 app.use('/session', sessionController)
 
+const userController = require('./controller/userController')
+app.use('/user', userController)
+
 const dataController = require("./controller/dataController")
 app.use("/data", dataController)
 

@@ -11,13 +11,14 @@ router.post("/signup", async (req, res) => {
   const user = req.body.username;
   const password = req.body.password;
   const passwordCheck = req.body.passwordCheck;
+  const hash = await bcrypt.hash(password, 10);
+  const role = req.body.role;
   // check if passwords match
   if (password !== passwordCheck) {
     res.send({ error: "incorrect password" });
+    return
   }
   try {
-    const hash = await bcrypt.hash(password, 10);
-    const role = req.body.role;
     const userCreate = await User.create({
       username: user,
       password: hash,

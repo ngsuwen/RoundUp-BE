@@ -50,7 +50,7 @@ router.get("/expense", async (req,res)=>{
 // get expense by userid
 router.get("/expense/:userid", async (req,res)=>{
     const {userid} = req.params
-    const expense = await DataExpense.findById({userid})
+    const expense = await DataExpense.findById(userid)
     res.send(expense)
 })
 

@@ -11,54 +11,77 @@ const category = ["Shopping", "Food", "Health", "Transportation", "Household"]
 const amount = ["100", "200", "300", "400", "500", "600", "700", "800"]
 const description = ["A", "B", "C", "D", "E", "F", "G", "H"]
 
-const getRandomCat = Math.floor(Math.random() * category.length)
-//console.log(category[getRandomCat])
-
-const getRandomAmt = Math.floor(Math.random() * amount.length)
-//console.log(amount[getRandomAmt])
-
-const getRandomDescrip = Math.floor(Math.random() * description.length)
-//console.log(description[getRandomDescrip])
 
 router.post("/expense/seed", async(req,res)=>{
 
-    const newExpense = [
+   let seedItems;
 
-        {
-            username: await User.findOne({username: "user1" }),
-            expensesentry:[
-                {
-                    amount: amount[Math.floor(Math.random() * amount.length)],
-                    category: category[Math.floor(Math.random() * category.length)],
-                    description: description[Math.floor(Math.random() * description.length)],
+   //not needed
+    // const newExpense = [
+
+    //     {
+    //         username: await User.findOne({username: "user1" }),
+    //         expensesentry:[
+    //             {
+    //                 amount: amount[Math.floor(Math.random() * amount.length)],
+    //                 category: category[Math.floor(Math.random() * category.length)],
+    //                 description: description[Math.floor(Math.random() * description.length)],
                     
-                },
-                {
-                    amount: amount[Math.floor(Math.random() * amount.length)],
-                    category: category[Math.floor(Math.random() * category.length)],
-                    description: description[Math.floor(Math.random() * description.length)],
+    //             },
+    //             {
+    //                 amount: amount[Math.floor(Math.random() * amount.length)],
+    //                 category: category[Math.floor(Math.random() * category.length)],
+    //                 description: description[Math.floor(Math.random() * description.length)],
                     
-                },
-                {
-                    amount: amount[Math.floor(Math.random() * amount.length)],
-                    category: category[Math.floor(Math.random() * category.length)],
-                    description: description[Math.floor(Math.random() * description.length)],
+    //             },
+    //             {
+    //                 amount: amount[Math.floor(Math.random() * amount.length)],
+    //                 category: category[Math.floor(Math.random() * category.length)],
+    //                 description: description[Math.floor(Math.random() * description.length)],
                     
-                }
-            ]
-        }
+    //             }
+    //         ]
+    //     }
     
-    ];
+    // ];
+            
+            for (let i = 0; i < 9; i++){
 
-    
-            try {
+                try {
+                
+                     seedItems = await DataExpense.create({
 
-                const seedItems = await DataExpense.create(newExpense);
-                res.send(seedItems);
-            } catch (err) {
-                res.send(err.message);
+                        username: await User.findOne({username: "user1" }),
+                        expensesentry:[
+                            {
+                                amount: amount[Math.floor(Math.random() * amount.length)],
+                                category: category[Math.floor(Math.random() * category.length)],
+                                description: description[Math.floor(Math.random() * description.length)],
+                                
+                            },
+                            {
+                                amount: amount[Math.floor(Math.random() * amount.length)],
+                                category: category[Math.floor(Math.random() * category.length)],
+                                description: description[Math.floor(Math.random() * description.length)],
+                                
+                            },
+                            {
+                                amount: amount[Math.floor(Math.random() * amount.length)],
+                                category: category[Math.floor(Math.random() * category.length)],
+                                description: description[Math.floor(Math.random() * description.length)],
+                                
+                            },
+
+                        ]})
+                
+                 } catch (err) {
+                         res.send(err.message);
+
             }
+            
+        }
 
+        res.send(seedItems);
         
 
       

@@ -22,6 +22,11 @@ app.use('/session', sessionController)
 const dataCashController = require("./controller/dataCashController")
 app.use("/data", dataCashController)
 
+const dataExpenseController = require("./controller/dataExpenseController")
+app.use("/data", dataExpenseController)
+
+const seederExpenseController = require("./seed/expenseSeeder")
+app.use("/data", seederExpenseController)
 
 
 // connect to mongoose

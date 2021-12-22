@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 const dataCashSchema = new Schema({
   username: {
     // make reference to user
@@ -10,6 +11,7 @@ const dataCashSchema = new Schema({
   },
   cashentry: [
     {
+      _id: false,
       date: {
         type: Date,
         default: Date.now,
@@ -30,5 +32,6 @@ const dataCashSchema = new Schema({
     },
   ],
 });
+
 
 module.exports = mongoose.model("dataCash", dataCashSchema);

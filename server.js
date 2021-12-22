@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose')
 require('dotenv').config();
 
-// const seedData = require('./seedData')
+
 
 app.use(express.json());
 
@@ -19,8 +19,10 @@ const MONGO_URL=`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_URL}
 const sessionController = require('./controller/sessionController')
 app.use('/session', sessionController)
 
-const dataController = require("./controller/dataController")
-app.use("/data", dataController)
+const dataCashController = require("./controller/dataCashController")
+app.use("/data", dataCashController)
+
+
 
 // connect to mongoose
 mongoose.connect(MONGO_URL).then(async()=>{

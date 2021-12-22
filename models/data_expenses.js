@@ -9,6 +9,7 @@ const dataExpensesSchema=new Schema({
   },
   expensesentry:[
     {
+      _id: false,
      date:{
         type: Date,
         default: Date.now,

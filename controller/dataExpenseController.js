@@ -53,7 +53,6 @@ router.get("/expense/:usernameid", async (req,res)=>{
     const expense = await DataExpense.find({username:usernameid})
     res.send(expense)
 })
-
 // show route
 router.get("/expense/:id", async (req,res)=>{
     const {id} = req.params

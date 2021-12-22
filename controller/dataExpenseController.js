@@ -47,10 +47,10 @@ router.get("/expense", async (req,res)=>{
     res.send(expense)
 })
 
-// get expense by userid
-router.get("/expense/:userid", async (req,res)=>{
-    const {userid} = req.params
-    const expense = await DataExpense.findById(userid)
+// get expense by username objectid
+router.get("/expense/:usernameid", async (req,res)=>{
+    const {usernameid} = req.params
+    const expense = await DataExpense.find({username:usernameid})
     res.send(expense)
 })
 

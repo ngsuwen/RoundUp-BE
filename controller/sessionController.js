@@ -7,8 +7,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Token = require("../models/token");
 
-router.use(express.json());
-
+// user login
 router.post("/login", async (req, res) => {
   const user = req.body.username;
   const password = req.body.password;
@@ -64,18 +63,21 @@ router.post("/token", async (req, res) => {
               if (err) {
                 // refresh token expired
                 // delete token from db
-                await Token.findOneAndDelete({refreshToken: refreshToken})
-                res.status(401).send({ error: "token expired"});
+                await Token.findOneAndDelete({ refreshToken: refreshToken });
+                res.status(401).send({ error: "token expired" });
               } else {
                 // generate new tokens
                 const newAccessToken = generateAccessToken(user.username);
                 const newRefreshToken = generateRefreshToken(user.username);
                 // store refreshtoken in db
-                await Token.findOneAndUpdate({
-                  refreshToken: refreshToken
-                },{
-                  refreshToken: newRefreshToken,
-                });
+                await Token.findOneAndUpdate(
+                  {
+                    refreshToken: refreshToken,
+                  },
+                  {
+                    refreshToken: newRefreshToken,
+                  }
+                );
                 res.send({
                   accessToken: newAccessToken,
                   refreshToken: newRefreshToken,
@@ -84,7 +86,7 @@ router.post("/token", async (req, res) => {
             }
           );
         } else {
-          res.status(401).send({ error: "invalid token"});
+          res.status(401).send({ error: "invalid token" });
         }
       } else {
         res.status(200).send({
@@ -94,6 +96,17 @@ router.post("/token", async (req, res) => {
       }
     }
   );
+});
+
+// get userid from token
+router.get("/:token",async (req, res) => {
+  const { token } = req.params
+  const foundUser = await Token.findOne({refreshToken: token}).populate('username');
+  if (foundUser){
+    res.send(foundUser.username._id)
+  } else {
+    res.send({error: 'invalid token'})
+  }
 });
 
 function generateAccessToken(user) {

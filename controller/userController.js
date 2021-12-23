@@ -40,7 +40,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // delete user
-router.get("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   const findUser = await User.findByIdAndRemove(id)
   // returns object with username, password and role

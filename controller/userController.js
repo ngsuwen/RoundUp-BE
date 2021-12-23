@@ -33,36 +33,39 @@ router.post("/signup", async (req, res) => {
 
 // get userinfo
 router.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  const findToken = await Token.findOne({refreshToken: id})
-  const findUser = await User.findById(findToken.username)
+  const { id } = req.params;
+  const findUser = await User.findById(id)
   // returns object with username, password and role
   res.send(findUser)
 });
 
-router.post("/forloop", async (req, res) => {
-  const user = req.body.username;
-  const password = req.body.password;
-  const passwordCheck = req.body.passwordCheck;
-  // check if passwords match
-  if (password !== passwordCheck) {
-    res.send({ error: "incorrect password" });
-  }
-  for (let i = 0; i < 3; i++) {
-    try {
-      const hash = await bcrypt.hash(password, 10);
-      const role = req.body.role;
-      const userCreate = await User.create({
-        username: user + i,
-        password: hash,
-        role: role,
-      });
-      // res.send(userCreate);
-    } catch (err) {
-      res.send({ error: err.message });
-    }
-  }
-  res.send("forloop pass");
+// delete user
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const findUser = await User.findByIdAndRemove(id)
+  // returns object with username, password and role
+  res.send(findUser)
 });
+
+// update user info
+// router.put("/:id", async (req, res) => {
+//   const { id } = req.params;
+//   const userFound = await User.findById(id);
+//   const password = req.body.password;
+//   const role = req.body.role;
+//   const isPasswordValid = await bcrypt.compare(
+//     password,
+//     userFound.password
+//   )
+//   if (!isPasswordValid) {
+//     res.send({ error: "incorrect password" });
+//     return
+//   }
+//   const updateUser = await User.findByIdAndUpdate(id, {
+//     password: password,
+//     role: role
+//   }, {new: true})
+//   res.send(updateUser)
+// });
 
 module.exports = router;

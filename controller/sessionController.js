@@ -114,7 +114,7 @@ router.delete("/:token",async (req, res) => {
   const { token } = req.params
   const foundToken = await Token.findOneAndDelete({refreshToken: token});
   if (foundToken){
-    res.status(200).send('ok')
+    res.status(200).send({status: 200})
   } else {
     res.send({error: 'invalid token'})
   }

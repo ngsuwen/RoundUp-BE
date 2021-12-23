@@ -109,6 +109,17 @@ router.get("/:token",async (req, res) => {
   }
 });
 
+// logout, delete session token fro db
+router.delete("/:token",async (req, res) => {
+  const { token } = req.params
+  const foundToken = await Token.findOneAndDelete({refreshToken: token});
+  if (foundToken){
+    res.status(200).send('ok')
+  } else {
+    res.send({error: 'invalid token'})
+  }
+});
+
 function generateAccessToken(user) {
   return jwt.sign({ username: user }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1d", // expires in 1day

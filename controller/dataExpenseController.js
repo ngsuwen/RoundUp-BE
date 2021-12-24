@@ -22,11 +22,6 @@ router.get("/expense", async(req, res) => {
   });
 
 
-
-
-
-
-
 // get expense by username objectid
 router.get("/expense/user/:usernameid", async (req,res)=>{
     const {usernameid} = req.params
@@ -58,7 +53,7 @@ router.post("/expense", async (req, res) => {
   });
 
 
-  
+
 
 
 module.exports = router

@@ -3,43 +3,13 @@ const Schema=mongoose.Schema;
 
 
 const dataExpensesSchema=new Schema({
-  username: { // make reference to user 
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  expensesentry:[
-    {
- 
-     date:{
-        type: Date,
-        default: Date.now,
-        required: true,
-     },
-     amount:{
-        type: Number,
-        required: true,
-     },
-     category:{
-        type: String,
-        required: true
-     },
-     description:{
-       type: String,
-       required: true
-     }
-    }
-]
-})
-
-
-//amended for testing
-//const dataExpensesSchema=new Schema({
   // username: { // make reference to user 
   //   type: Schema.Types.ObjectId,
   //   ref: 'User',
   //   required: true
   // },
+  expensesentry:[
+    {
  
     //  date:{
     //     type: Date,
@@ -54,13 +24,43 @@ const dataExpensesSchema=new Schema({
     //     type: String,
     //     required: true
     //  },
-    //  description:{
-    //    type: String,
-    //    required: true
-    //  }
+     description:{
+       type: String,
+       required: true
+     }
+    }
+]
+})
+
+
+//amended for testing
+// const dataExpensesSchema=new Schema({
+//   // username: { // make reference to user 
+//   //   type: Schema.Types.ObjectId,
+//   //   ref: 'User',
+//   //   required: true
+//   // },
+ 
+//   //    date:{
+//   //       type: Date,
+//   //       default: Date.now,
+//   //       required: true,
+//   //    },
+//   //    amount:{
+//   //       type: Number,
+//   //       required: true,
+//   //    },
+//   //    category:{
+//   //       type: String,
+//   //       required: true
+//   //    },
+//      description:{
+//        type: String,
+//        required: true
+//      }
      
 
-//})
+// })
 
 
 

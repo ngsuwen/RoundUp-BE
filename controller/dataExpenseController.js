@@ -8,44 +8,24 @@ const User = require("../models/user")
 const DataExpense = require("../models/data_expenses")
 
 
-// Seeding data
-
-// router.post("/expense/seed", async(req,res)=>{
-
-//     const newExpense = [
-
-//         {
-//             username: await User.findOne({username: "user1" }),
-//             expensesentry:[
-//                 {
-//                     amount: 100,
-//                     category: "shopping",
-//                     description: "new bag",
-                    
-//                 }
-//             ]
-//         }
-    
-//     ];
-
-
-//         try {
-//         const seedItems = await DataExpense.create(newExpense);
-//         res.send(seedItems);
-//     } catch (err) {
-//         res.send(err.message);
-//     }
-
-// })
-
-
-
 // Routes
 // get all expense
-router.get("/expense", async (req,res)=>{
-    const expense = await DataExpense.find({})
+router.get("/expense", async(req, res) => {
+    let expense
+    try{
+      expense = await DataExpense.find({})
+    }catch(error){
+      res.status(500).send({message: 'Unexpected Error'})
+      return
+    }
     res.send(expense)
-})
+  });
+
+
+
+
+
+
 
 // get expense by username objectid
 router.get("/expense/user/:usernameid", async (req,res)=>{
@@ -53,6 +33,8 @@ router.get("/expense/user/:usernameid", async (req,res)=>{
     const expense = await DataExpense.find({username:usernameid})
     res.send(expense)
 })
+
+
 // show route
 router.get("/expense/:id", async (req,res)=>{
     const {id} = req.params
@@ -60,12 +42,28 @@ router.get("/expense/:id", async (req,res)=>{
     res.send(expense)
 })
 
-// create route
-router.post("/expense", async (req,res)=>{
-    const expense = await DataExpense.create(req.body)
-    res.send(expense)
-})
 
+
+
+// create route expense
+router.post("/expense", async (req, res) => {
+    let createdExpense;
+    try{
+      createdExpense = await DataExpense.create(req.body);
+    }catch(err){
+      res.status(400).send({messsage: 'Invalid request body'})
+      return
+    }
+    res.send(createdExpense);
+  });
+
+
+  
 
 
 module.exports = router
+
+
+//checklist:
+// 1. router.get("/expense" - done
+// 2. router.post("/expense" - done

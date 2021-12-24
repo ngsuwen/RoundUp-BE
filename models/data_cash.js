@@ -11,7 +11,7 @@ const dataCashSchema = new Schema({
   },
   cashentry: [
     {
-      _id: false,
+   
       date: {
         type: Date,
         default: Date.now,

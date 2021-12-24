@@ -3,27 +3,27 @@ const Schema=mongoose.Schema;
 
 
 const dataExpensesSchema=new Schema({
-  // username: { // make reference to user 
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: true
-  // },
+  username: { // make reference to user 
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   expensesentry:[
     {
  
-    //  date:{
-    //     type: Date,
-    //     default: Date.now,
-    //     required: true,
-    //  },
-    //  amount:{
-    //     type: Number,
-    //     required: true,
-    //  },
-    //  category:{
-    //     type: String,
-    //     required: true
-    //  },
+     date:{
+        type: Date,
+        default: Date.now,
+        required: true,
+     },
+     amount:{
+        type: Number,
+        required: true,
+     },
+     category:{
+        type: String,
+        required: true
+     },
      description:{
        type: String,
        required: true

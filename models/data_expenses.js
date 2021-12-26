@@ -3,11 +3,11 @@ const Schema=mongoose.Schema;
 
 
 const dataExpensesSchema=new Schema({
-  // username: { // make reference to user 
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: true
-  // },
+  username: { // make reference to user 
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   expensesentry:[
     {
  

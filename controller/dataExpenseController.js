@@ -56,7 +56,7 @@ router.post("/expense", async (req, res) => {
   router.delete("/expense/:id", async(req,res)=>{
       let deletedExpense;
       try{
-          deletedExpense = await DataExpense.findByIdAndDelete(req.params.id);
+          deletedExpense = await DataExpense.findByIdAndRemove(req.params.id);
       } catch(err){
           res.status(400).send({message: "Invalid request body"})
           return

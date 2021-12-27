@@ -66,6 +66,19 @@ router.post("/expense", async (req, res) => {
 
 
 
+  router.put("/expense':id", async(req,res)=>{
+      let editedExpense;
+      try{
+          editedExpense = await DataExpense.findByIdAndUpdate(req.params.id, req.body, {new:true} )
+      } catch(err){
+          res.status(400).send({message: "Invalid request body"})
+      }
+      res.send(editedExpense)
+  })
+
+
+
+
 module.exports = router
 
 

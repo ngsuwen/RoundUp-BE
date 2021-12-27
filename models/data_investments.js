@@ -8,7 +8,7 @@ const dataInvestmentsSchema = new Schema({
     ref: "User",
     required: true,
   },
-  investmentsentry: [
+  investmentsentry: 
     {
 
       date: {
@@ -33,7 +33,7 @@ const dataInvestmentsSchema = new Schema({
         required: true,
       },
     },
-  ],
+  
 });
 
 module.exports = mongoose.model("dataInvestments", dataInvestmentsSchema);

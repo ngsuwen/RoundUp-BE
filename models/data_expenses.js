@@ -8,7 +8,7 @@ const dataExpensesSchema=new Schema({
     ref: 'User',
     required: true
   },
-  expensesentry:[
+  expensesentry:
     {
  
      date:{
@@ -29,43 +29,12 @@ const dataExpensesSchema=new Schema({
        required: true
      }
     }
-]
+
 })
-
-
-//amended for testing
-// const dataExpensesSchema=new Schema({
-//   // username: { // make reference to user 
-//   //   type: Schema.Types.ObjectId,
-//   //   ref: 'User',
-//   //   required: true
-//   // },
- 
-//   //    date:{
-//   //       type: Date,
-//   //       default: Date.now,
-//   //       required: true,
-//   //    },
-//   //    amount:{
-//   //       type: Number,
-//   //       required: true,
-//   //    },
-//   //    category:{
-//   //       type: String,
-//   //       required: true
-//   //    },
-//      description:{
-//        type: String,
-//        required: true
-//      }
-     
-
-// })
-
-
-
 
 
 
 
 module.exports=mongoose.model('dataExpenses',dataExpensesSchema)
+
+

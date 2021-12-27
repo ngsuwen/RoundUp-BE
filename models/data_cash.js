@@ -9,7 +9,7 @@ const dataCashSchema = new Schema({
     ref: "User",
     required: true,
   },
-  cashentry: [
+  cashentry: 
     {
    
       date: {
@@ -30,7 +30,7 @@ const dataCashSchema = new Schema({
         required: true,
       },
     },
-  ],
+  
 });
 
 

@@ -87,21 +87,21 @@ router.post("/expense/seed", async(req,res)=>{
                          seedItems = await DataExpense.create({
     
                             username: await User.findOne({username: "user1" }),
-                            expensesentry:[
+                            expensesentry:
                                 {
                                     amount: amount[Math.floor(Math.random() * amount.length)],
                                     category: category[Math.floor(Math.random() * category.length)],
                                     description: description[Math.floor(Math.random() * description.length)],
                                     date: currDate
                                     
-                                },
-                                {
-                                    amount: amount[Math.floor(Math.random() * amount.length)],
-                                    category: category[Math.floor(Math.random() * category.length)],
-                                    description: description[Math.floor(Math.random() * description.length)],
-                                    date: currDate
+                                }
+                                // {
+                                //     amount: amount[Math.floor(Math.random() * amount.length)],
+                                //     category: category[Math.floor(Math.random() * category.length)],
+                                //     description: description[Math.floor(Math.random() * description.length)],
+                                //     date: currDate
                                     
-                                },
+                                // },
                                 // {
                                 //     amount: amount[Math.floor(Math.random() * amount.length)],
                                 //     category: category[Math.floor(Math.random() * category.length)],
@@ -110,7 +110,7 @@ router.post("/expense/seed", async(req,res)=>{
                                     
                                 // },
     
-                            ]})
+                         })
                     
                      } catch (err) {
                              res.send(err.message);

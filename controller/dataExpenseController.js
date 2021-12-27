@@ -22,11 +22,11 @@ router.get("/expense", async(req, res) => {
   });
 
 
-// get expense by username objectid
+// get expense by username and monthly data 
 router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
-    const {usernameid} = req.params.usernameid
-    const {monthOfExpense} = req.params.monthOfExpense
-    const expense = await DataExpense.find({username:usernameid},{ "date" : { $regex: monthOfExpense }})
+    const usernameid = req.params.usernameid
+    const monthOfExpense = req.params.monthOfExpense
+    const expense = await DataExpense.find({username:usernameid, 'expensesentry.date':{'$gte': new Date(`${monthOfExpense}-01`), '$lt': new Date(`${monthOfExpense}-31`)}})
     res.send(expense)
 })
 

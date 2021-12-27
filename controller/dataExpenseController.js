@@ -53,16 +53,26 @@ router.post("/expense", async (req, res) => {
   });
 
 
-  router.delete("/expense/:id", async(req,res)=>{
-      let deletedExpense;
-      try{
-          deletedExpense = await DataExpense.findByIdAndRemove(req.params.id);
-      } catch(err){
-          res.status(400).send({message: "Invalid request body"})
-          return
+//   router.delete("/expense/:id", async(req,res)=>{
+//       let deletedExpense;
+//       try{
+//           deletedExpense = await DataExpense.findByIdAndRemove(req.params.id);
+//       } catch(err){
+//           res.status(400).send({message: "Invalid request body"})
+//           return
+//       }
+//       res.send(deletedExpense)
+//   })
+
+
+  router.delete("/expense/:id", (req, res) => {
+    DataExpense.findByIdAndRemove(req.params.id, (err, deletedExpense) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
       }
-      res.send(deletedExpense)
-  })
+      res.status(200).json(deletedExpense);
+    });
+  });
 
 
 

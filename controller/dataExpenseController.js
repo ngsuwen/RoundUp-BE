@@ -23,9 +23,10 @@ router.get("/expense", async(req, res) => {
 
 
 // get expense by username objectid
-router.get("/expense/user/:usernameid", async (req,res)=>{
-    const {usernameid} = req.params
-    const expense = await DataExpense.find({username:usernameid})
+router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
+    const {usernameid} = req.params.usernameid
+    const {monthOfExpense} = req.params.monthOfExpense
+    const expense = await DataExpense.find({username:usernameid},{ "date" : { $regex: monthOfExpense }})
     res.send(expense)
 })
 

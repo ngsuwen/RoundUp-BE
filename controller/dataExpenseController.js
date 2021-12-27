@@ -67,7 +67,7 @@ router.post("/expense", async (req, res) => {
 
 
 
-  router.put("/expense':id", async(req,res)=>{
+  router.put("/expense/:id", async(req,res)=>{
       let editedExpense;
       try{
           editedExpense = await DataExpense.findByIdAndUpdate(req.params.id, req.body, {new:true} )

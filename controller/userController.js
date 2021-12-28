@@ -48,24 +48,25 @@ router.delete("/:id", async (req, res) => {
 });
 
 // update user info
-// router.put("/:id", async (req, res) => {
-//   const { id } = req.params;
-//   const userFound = await User.findById(id);
-//   const password = req.body.password;
-//   const role = req.body.role;
-//   const isPasswordValid = await bcrypt.compare(
-//     password,
-//     userFound.password
-//   )
-//   if (!isPasswordValid) {
-//     res.send({ error: "incorrect password" });
-//     return
-//   }
-//   const updateUser = await User.findByIdAndUpdate(id, {
-//     password: password,
-//     role: role
-//   }, {new: true})
-//   res.send(updateUser)
-// });
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const userFound = await User.findById(id);
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword
+  const role = req.body.role;
+  const isPasswordValid = await bcrypt.compare(
+    oldPassword,
+    userFound.password
+  )
+  if (!isPasswordValid) {
+    res.send({ error: "incorrect password" });
+    return
+  }
+  const updateUser = await User.findByIdAndUpdate(id, {
+    password: await bcrypt.hash(newPassword, 10),
+    role: role
+  }, {new: true})
+  res.send(updateUser)
+});
 
 module.exports = router;

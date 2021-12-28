@@ -66,8 +66,18 @@ router.post("/expense", async (req, res) => {
   })
 
 
+  router.get("/expense/:id/edit", async(req,res)=>{
+    let editedExpense;
+    try{
+        editedExpense = await DataExpense.findById(req.params.id)
+    } catch(err){
+        res.status(400).send({message: "Invalid request body"})
+    }
+    res.send(editedExpense)
+})
 
-  router.put("/expense/:id", async(req,res)=>{
+
+  router.put("/expense/:id/edit", async(req,res)=>{
       let editedExpense;
       try{
           editedExpense = await DataExpense.findByIdAndUpdate(req.params.id, req.body, {new:true} )

@@ -23,7 +23,7 @@ router.post("/investment/seed", async(req,res)=>{
                 
                     //////////////the 1 means day. i.e, if wants to minus 3 days, change to 3
                     try {
-                         const currDate = endDate.setDate(endDate.getDate()-1) // minusing once per loop
+                         const currDate = endDate.setDate(endDate.getDate()-20) // minusing once per loop
                          seedItems = await DataInvestment.create({
     
                             username: await User.findOne({username: "user1" }),

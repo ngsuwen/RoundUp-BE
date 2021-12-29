@@ -16,6 +16,10 @@ const dataInvestmentsSchema = new Schema({
         default: Date.now,
         required: true,
       },
+      ticker:{
+        type: String,
+        required: true,
+      },
       amount: {
         type: Number,
         required: true,

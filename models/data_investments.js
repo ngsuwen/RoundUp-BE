@@ -17,7 +17,7 @@ const dataInvestmentsSchema = new Schema({
         required: true,
       },
       ticker:{
-        type: String,
+        type: String, // autocomplete form pulled from API
         required: true,
       },
       amount: {
@@ -30,10 +30,6 @@ const dataInvestmentsSchema = new Schema({
       },
       category: {
         type: String, // stocks, crypto, others (house,gold,etc), depending on which they select, will render a different autocomplete form
-        required: true,
-      },
-      description: {
-        type: String, // autocomplete form pulled from API
         required: true,
       },
     },

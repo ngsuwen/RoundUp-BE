@@ -8,44 +8,28 @@ const User = require("../models/user")
 const DataCash = require("../models/data_cash")
 
 
-// Seeding data
-
-router.post("/cash/seed", async(req,res)=>{
-
-    const newCash = [
-
-        {
-            username: await User.findOne({username: "user1" }),
-            cashentry:[
-                {
-                    amount: 5000,
-                    category: "test",
-                    description: "testing",
-                    
-                }
-            ]
-        }
-    
-    ];
-
-
-        try {
-        const seedItems = await DataCash.create(newCash);
-        res.send(seedItems);
-    } catch (err) {
-        res.send(err.message);
-    }
-
-})
-
-
-
 // Routes
 // get all cash
-router.get("/cash", async (req,res)=>{
-    const cash = await DataCash.find({})
+router.get("/cash", async(req, res) => {
+    let cash
+    try{
+      cash = await DataCash.find({})
+    }catch(error){
+      res.status(500).send({message: 'Unexpected Error'})
+      return
+    }
     res.send(cash)
-})
+  });
+
+
+// get expense by username and monthly data 
+// router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
+//     const usernameid = req.params.usernameid
+//     const monthOfExpense = req.params.monthOfExpense
+//     const expense = await DataExpense.find({username:usernameid, 'expensesentry.date':{'$gte': new Date(`${monthOfExpense}-01`), '$lt': new Date(`${monthOfExpense}-31`)}})
+//     res.send(expense)
+// })
+
 
 // show route
 router.get("/cash/:id", async (req,res)=>{
@@ -54,12 +38,57 @@ router.get("/cash/:id", async (req,res)=>{
     res.send(cash)
 })
 
-// create route
-router.post("/cash", async (req,res)=>{
-    const cash = await DataCash.create(req.body)
-    res.send(cash)
+
+
+
+// create route cash
+router.post("/cash", async (req, res) => {
+    let createdCash;
+    try{
+      createdCash = await DataCash.create(req.body);
+    }catch(err){
+      res.status(400).send({message: 'Invalid request body'})
+      return
+    }
+    res.send(createdCash);
+  });
+
+
+  router.delete("/cash/:id", async(req,res)=>{
+      let deletedCash;
+      try{
+          deletedCash = await DataCash.findByIdAndRemove(req.params.id);
+      } catch(err){
+          res.status(400).send({message: "Invalid request body"})
+          return
+      }
+      res.send(deletedCash)
+  })
+
+
+  router.get("/cash/:id/edit", async(req,res)=>{
+    let editedCash;
+    try{
+        editedCash = await DataCash.findById(req.params.id)
+    } catch(err){
+        res.status(400).send({message: "Invalid request body"})
+    }
+    res.send(editedCash)
 })
+
+
+  router.put("/cash/:id/edit", async(req,res)=>{
+      let editedCash;
+      try{
+          editedCash = await DataCash.findByIdAndUpdate(req.params.id, req.body, {new:true} )
+      } catch(err){
+          res.status(400).send({message: "Invalid request body"})
+      }
+      res.send(editedCash)
+  })
+
 
 
 
 module.exports = router
+

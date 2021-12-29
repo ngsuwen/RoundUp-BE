@@ -28,8 +28,8 @@ const dataCashSchema = new Schema({
       description: {
         type: String,
         required: true,
-      },
-    },
+      }
+    }
   
 });
 

@@ -29,6 +29,9 @@ app.use("/data", dataExpenseController)
 const seederExpenseController = require("./seed/expenseSeeder")
 app.use("/data", seederExpenseController)
 
+const seederCashController = require("./seed/cashSeeder")
+app.use("/data", seederCashController)
+
 
 // connect to mongoose
 mongoose.connect(MONGO_URL).then(async()=>{

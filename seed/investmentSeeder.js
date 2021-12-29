@@ -5,15 +5,16 @@ const router = express.Router()
 
 // Schema
 const User = require("../models/user")
-const DataCash = require("../models/data_cash")
+const DataInvestment = require("../models/data_investments")
 
-const category = ["Income", "Savings", "Petty cash", "Bonus", "Allowance"]
+const category = ["Crypto", "US stocks"]
 const amount = ["100", "200", "300", "400", "500", "600", "700", "800"]
-const description = ["A", "B", "C", "D", "E", "F", "G", "H"]
+const ticker = ["TSLA", "AAPL", "AMZN", "MSFT", "GOOGL", "FB", "NVDA", "V"]
+const quantity = ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]
 
 
 
-router.post("/cash/seed", async(req,res)=>{
+router.post("/investment/seed", async(req,res)=>{
 
    let seedItems;
    const endDate = new Date();
@@ -22,15 +23,16 @@ router.post("/cash/seed", async(req,res)=>{
                 
                     //////////////the 1 means day. i.e, if wants to minus 3 days, change to 3
                     try {
-                         const currDate = endDate.setDate(endDate.getDate()-1473) // minusing once per loop
-                         seedItems = await DataCash.create({
+                         const currDate = endDate.setDate(endDate.getDate()-1) // minusing once per loop
+                         seedItems = await DataInvestment.create({
     
                             username: await User.findOne({username: "user1" }),
-                            cashentry:
+                            investmentsentry:
                                 {
                                     amount: amount[Math.floor(Math.random() * amount.length)],
                                     category: category[Math.floor(Math.random() * category.length)],
-                                    description: description[Math.floor(Math.random() * description.length)],
+                                    ticker: ticker[Math.floor(Math.random() * ticker.length)],
+                                    quantity: quantity[Math.floor(Math.random() * quantity.length)],
                                     date: currDate
                                     
                                 }

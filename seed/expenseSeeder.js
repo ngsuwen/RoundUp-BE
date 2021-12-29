@@ -83,7 +83,7 @@ router.post("/expense/seed", async(req,res)=>{
                 
                     //////////////the 1 means day. i.e, if wants to minus 3 days, change to 3
                     try {
-                         const currDate = endDate.setDate(endDate.getDate()-1473) // minusing once per loop
+                         const currDate = endDate.setDate(endDate.getDate()-600) // minusing once per loop
                          seedItems = await DataExpense.create({
     
                             username: await User.findOne({username: "user1" }),
@@ -95,20 +95,7 @@ router.post("/expense/seed", async(req,res)=>{
                                     date: currDate
                                     
                                 }
-                                // {
-                                //     amount: amount[Math.floor(Math.random() * amount.length)],
-                                //     category: category[Math.floor(Math.random() * category.length)],
-                                //     description: description[Math.floor(Math.random() * description.length)],
-                                //     date: currDate
-                                    
-                                // },
-                                // {
-                                //     amount: amount[Math.floor(Math.random() * amount.length)],
-                                //     category: category[Math.floor(Math.random() * category.length)],
-                                //     description: description[Math.floor(Math.random() * description.length)],
-                                //     date: currDate
-                                    
-                                // },
+          
     
                          })
                     

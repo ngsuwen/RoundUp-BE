@@ -26,6 +26,9 @@ app.use("/data", dataCashController)
 const dataExpenseController = require("./controller/dataExpenseController")
 app.use("/data", dataExpenseController)
 
+const dataInvestmentController = require("./controller/dataInvestmentController")
+app.use("/data", dataInvestmentController)
+
 const seederExpenseController = require("./seed/expenseSeeder")
 app.use("/data", seederExpenseController)
 

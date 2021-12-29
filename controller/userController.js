@@ -42,9 +42,19 @@ router.get("/:id", async (req, res) => {
 // delete user
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const findUser = await User.findByIdAndRemove(id)
+  const userFound = await User.findById(id);
+  const oldPassword = req.body.oldPassword;
+  const isPasswordValid = await bcrypt.compare(
+    oldPassword,
+    userFound.password
+  )
+  if (!isPasswordValid) {
+    res.send({ error: "incorrect password" });
+    return
+  }
+  const removeUser = await User.findByIdAndRemove(id)
   // returns object with username, password and role
-  res.send(findUser)
+  res.send(removeUser)
 });
 
 // update user info

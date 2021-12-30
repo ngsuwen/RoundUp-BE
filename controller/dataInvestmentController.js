@@ -37,12 +37,38 @@ router.get("/investment/:id", async (req, res) => {
   res.send(investment);
 });
 
+// const for crypto api
+const CRYPTO_URL=process.env.CRYPTO_URL;
+
+// show crypto current value
+router.get("/investment/crypto/:ticker/current", async (req, res) => {
+  const { ticker } = req.params;
+  const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
+  const list = await listResponse.json()
+  const coin = list.filter(element=>element.symbol===ticker)
+  const id = coin[0].id
+  const response = await fetch(`https://${CRYPTO_URL}/coins/${id}`)
+  const data = await response.json()
+  const currentValue = data.market_data.current_price.sgd.toString()
+  res.send(currentValue)
+});
+
+// show stocks certain date (DD-MM-YYYY)
+router.get("/investment/crypto/:ticker/:date", async (req, res) => {
+  const { ticker, date } = req.params;
+  const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
+  const list = await listResponse.json()
+  const coin = list.filter(element=>element.symbol===ticker)
+  const id = coin[0].id
+  const response = await fetch(`https://${CRYPTO_URL}/coins/${id}/history?date=${date}`)
+  const data = await response.json()
+  const currentValue = data.market_data.current_price.sgd.toString()
+  res.send(currentValue)
+});
+
 // const for stocks api
 const STOCKS_URL=process.env.STOCKS_URL;
 const STOCKS_KEY=process.env.STOCKS_KEY;
-
-// show crypto current value
-// show crypto certain date
 
 // show stocks current value
 router.get("/investment/stocks/:ticker/current", async (req, res) => {

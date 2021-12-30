@@ -26,8 +26,12 @@ router.get("/expense", async(req, res) => {
 router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
     const usernameid = req.params.usernameid
     const monthOfExpense = req.params.monthOfExpense
-    // setting lte 31 means that on month with 30 days, the first day of the next month would be included. need to fix this bug. 
-    const expense = await DataExpense.find({username:usernameid, 'expensesentry.date':{'$gte': new Date(`${monthOfExpense}-01`), '$lte': new Date(`${monthOfExpense}-31`).setHours(23,59,59,999)}})
+    const monthOfExpenseDateObj = new Date(monthOfExpense)
+    // previous month's last day 2359
+    const firstday = new Date(monthOfExpenseDateObj.getFullYear(), monthOfExpenseDateObj.getMonth(),1)
+    // current month's last day 2359
+    const lastday = new Date(monthOfExpenseDateObj.getFullYear(), monthOfExpenseDateObj.getMonth() + 1, 1)
+    const expense = await DataExpense.find({username:usernameid, 'expensesentry.date':{'$gt': firstday, '$lte': lastday}})
     res.send(expense)
 })
 

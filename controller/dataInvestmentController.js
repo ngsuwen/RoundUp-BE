@@ -59,8 +59,7 @@ router.get("/investment/stocks/:ticker/:date", async (req, res) => {
   const dateFormat = date.replace(/-/g, '/')
   const unixTime = await fetch(`https://showcase.api.linx.twenty57.net/UnixTime/tounixtimestamp?datetime=${dateFormat}`)
   const unixTimeData = await unixTime.json()
-  const addUnixTime = Number(unixTimeData.UnixTimeStamp)+86400
-  const response = await fetch(`https://${STOCKS_URL}/stock/candle?symbol=${ticker}&resolution=D&from=${addUnixTime}&to=${addUnixTime}&token=${STOCKS_KEY}`)
+  const response = await fetch(`https://${STOCKS_URL}/stock/candle?symbol=${ticker}&resolution=D&from=${unixTimeData}&to=${unixTimeData}&token=${STOCKS_KEY}`)
   const data = await response.json()
   const value = data.c[0].toString()
   res.send(value)

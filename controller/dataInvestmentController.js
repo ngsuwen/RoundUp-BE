@@ -73,7 +73,7 @@ const STOCKS_KEY=process.env.STOCKS_KEY;
 // show stocks current value
 router.get("/investment/stocks/:ticker/current", async (req, res) => {
   const { ticker } = req.params;
-  const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker}&token=${STOCKS_KEY}`)
+  const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker.toUpperCase()}&token=${STOCKS_KEY}`)
   const data = await response.json()
   const currentValue = data.c.toString()
   res.send(currentValue)
@@ -85,7 +85,7 @@ router.get("/investment/stocks/:ticker/:date", async (req, res) => {
   const dateFormat = date.replace(/-/g, '/')
   const unixTime = await fetch(`https://showcase.api.linx.twenty57.net/UnixTime/tounixtimestamp?datetime=${dateFormat}`)
   const unixTimeData = await unixTime.json()
-  const response = await fetch(`https://${STOCKS_URL}/stock/candle?symbol=${ticker}&resolution=D&from=${unixTimeData}&to=${unixTimeData}&token=${STOCKS_KEY}`)
+  const response = await fetch(`https://${STOCKS_URL}/stock/candle?symbol=${ticker.toUpperCase()}&resolution=D&from=${unixTimeData.UnixTimeStamp}&to=${unixTimeData.UnixTimeStamp}&token=${STOCKS_KEY}`)
   const data = await response.json()
   const value = data.c[0].toString()
   res.send(value)

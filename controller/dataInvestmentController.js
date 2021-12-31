@@ -10,6 +10,20 @@ const User = require("../models/user");
 const DataInvestment = require("../models/data_investments");
 
 // Routes
+
+// get all expense
+router.get("/", async(req, res) => {
+  let investment
+  try{
+    investment = await DataInvestment.find({})
+  }catch(error){
+    res.status(500).send({message: 'Unexpected Error'})
+    return
+  }
+  res.send(investment)
+});
+
+
 // get all investment
 router.get("/user/:usernameid/", async (req, res) => {
   const usernameid = req.params.usernameid

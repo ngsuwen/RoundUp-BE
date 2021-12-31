@@ -21,13 +21,13 @@ const userController = require('./controller/userController')
 app.use('/user', userController)
 
 const dataCashController = require("./controller/dataCashController")
-app.use("/data", dataCashController)
+app.use("/data/cash", dataCashController)
 
 const dataExpenseController = require("./controller/dataExpenseController")
-app.use("/data", dataExpenseController)
+app.use("/data/expense", dataExpenseController)
 
 const dataInvestmentController = require("./controller/dataInvestmentController")
-app.use("/data", dataInvestmentController)
+app.use("/data/investment", dataInvestmentController)
 
 const seederExpenseController = require("./seed/expenseSeeder")
 app.use("/data", seederExpenseController)

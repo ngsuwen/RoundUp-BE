@@ -10,7 +10,7 @@ const DataCash = require("../models/data_cash")
 
 // Routes
 // get all cash
-router.get("/cash", async(req, res) => {
+router.get("/", async(req, res) => {
     let cash
     try{
       cash = await DataCash.find({})
@@ -32,7 +32,7 @@ router.get("/cash", async(req, res) => {
 
 
 // show route
-router.get("/cash/:id", async (req,res)=>{
+router.get("/:id", async (req,res)=>{
     const {id} = req.params
     const cash = await DataCash.findById(id).populate("username")
     res.send(cash)
@@ -42,7 +42,7 @@ router.get("/cash/:id", async (req,res)=>{
 
 
 // create route cash
-router.post("/cash", async (req, res) => {
+router.post("/", async (req, res) => {
     let createdCash;
     try{
       createdCash = await DataCash.create(req.body);
@@ -54,7 +54,7 @@ router.post("/cash", async (req, res) => {
   });
 
 
-  router.delete("/cash/:id", async(req,res)=>{
+  router.delete("/:id", async(req,res)=>{
       let deletedCash;
       try{
           deletedCash = await DataCash.findByIdAndRemove(req.params.id);
@@ -66,7 +66,7 @@ router.post("/cash", async (req, res) => {
   })
 
 
-  router.get("/cash/:id/edit", async(req,res)=>{
+  router.get("/:id/edit", async(req,res)=>{
     let editedCash;
     try{
         editedCash = await DataCash.findById(req.params.id)
@@ -77,7 +77,7 @@ router.post("/cash", async (req, res) => {
 })
 
 
-  router.put("/cash/:id/edit", async(req,res)=>{
+  router.put("/:id/edit", async(req,res)=>{
       let editedCash;
       try{
           editedCash = await DataCash.findByIdAndUpdate(req.params.id, req.body, {new:true} )

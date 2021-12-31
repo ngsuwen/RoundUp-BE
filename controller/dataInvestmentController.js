@@ -11,7 +11,7 @@ const DataInvestment = require("../models/data_investments");
 
 // Routes
 
-// get all expense
+// get all investment
 router.get("/", async(req, res) => {
   let investment
   try{
@@ -24,7 +24,7 @@ router.get("/", async(req, res) => {
 });
 
 
-// get all investment
+// get 
 router.get("/user/:usernameid/", async (req, res) => {
   const usernameid = req.params.usernameid
   let investment;

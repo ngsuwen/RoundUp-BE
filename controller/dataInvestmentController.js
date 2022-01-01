@@ -50,7 +50,7 @@ router.get("/investment/crypto/:ticker/current", async (req, res) => {
   const response = await fetch(`https://${CRYPTO_URL}/coins/${id}`)
   const data = await response.json()
   const currentValue = data.market_data.current_price.sgd.toString()
-  res.send(currentValue)
+  res.send({value: currentValue})
 });
 
 // show stocks certain date (DD-MM-YYYY)
@@ -63,7 +63,7 @@ router.get("/investment/crypto/:ticker/:date", async (req, res) => {
   const response = await fetch(`https://${CRYPTO_URL}/coins/${id}/history?date=${date}`)
   const data = await response.json()
   const currentValue = data.market_data.current_price.sgd.toString()
-  res.send(currentValue)
+  res.send({value: currentValue})
 });
 
 // const for stocks api
@@ -76,7 +76,7 @@ router.get("/investment/stocks/:ticker/current", async (req, res) => {
   const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker.toUpperCase()}&token=${STOCKS_KEY}`)
   const data = await response.json()
   const currentValue = data.c.toString()
-  res.send(currentValue)
+  res.send({value: currentValue})
 });
 
 // show stocks certain date (YYYY-MM-DD)
@@ -88,7 +88,7 @@ router.get("/investment/stocks/:ticker/:date", async (req, res) => {
   const response = await fetch(`https://${STOCKS_URL}/stock/candle?symbol=${ticker.toUpperCase()}&resolution=D&from=${unixTimeData.UnixTimeStamp}&to=${unixTimeData.UnixTimeStamp}&token=${STOCKS_KEY}`)
   const data = await response.json()
   const value = data.c[0].toString()
-  res.send(value)
+  res.send({value: value})
 });
 
 // create route investment

@@ -10,7 +10,7 @@ const DataExpense = require("../models/data_expenses")
 
 // Routes
 // get all expense
-router.get("/expense", async(req, res) => {
+router.get("/", async(req, res) => {
     let expense
     try{
       expense = await DataExpense.find({})
@@ -23,7 +23,7 @@ router.get("/expense", async(req, res) => {
 
 
 // get expense by username and monthly data 
-router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
+router.get("/user/:usernameid/:monthOfExpense", async (req,res)=>{
     const usernameid = req.params.usernameid
     const monthOfExpense = req.params.monthOfExpense
     const monthOfExpenseDateObj = new Date(monthOfExpense)
@@ -37,7 +37,7 @@ router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
 
 
 // show route
-router.get("/expense/:id", async (req,res)=>{
+router.get("/:id", async (req,res)=>{
     const {id} = req.params
     const expense = await DataExpense.findById(id).populate("username")
     res.send(expense)
@@ -47,7 +47,7 @@ router.get("/expense/:id", async (req,res)=>{
 
 
 // create route expense
-router.post("/expense", async (req, res) => {
+router.post("/", async (req, res) => {
     let createdExpense;
     try{
       createdExpense = await DataExpense.create(req.body);
@@ -59,7 +59,7 @@ router.post("/expense", async (req, res) => {
   });
 
 
-  router.delete("/expense/:id", async(req,res)=>{
+  router.delete("/:id", async(req,res)=>{
       let deletedExpense;
       try{
           deletedExpense = await DataExpense.findByIdAndRemove(req.params.id);
@@ -71,7 +71,7 @@ router.post("/expense", async (req, res) => {
   })
 
 
-  router.get("/expense/:id/edit", async(req,res)=>{
+  router.get("/:id/edit", async(req,res)=>{
     let editedExpense;
     try{
         editedExpense = await DataExpense.findById(req.params.id)
@@ -82,7 +82,7 @@ router.post("/expense", async (req, res) => {
 })
 
 
-  router.put("/expense/:id/edit", async(req,res)=>{
+  router.put("/:id/edit", async(req,res)=>{
       let editedExpense;
       try{
           editedExpense = await DataExpense.findByIdAndUpdate(req.params.id, req.body, {new:true} )
@@ -97,7 +97,3 @@ router.post("/expense", async (req, res) => {
 
 module.exports = router
 
-
-//checklist:
-// 1. router.get("/expense" - done
-// 2. router.post("/expense" - done

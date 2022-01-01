@@ -10,11 +10,26 @@ const User = require("../models/user");
 const DataInvestment = require("../models/data_investments");
 
 // Routes
+
 // get all investment
-router.get("/investment", async (req, res) => {
+router.get("/", async(req, res) => {
+  let investment
+  try{
+    investment = await DataInvestment.find({})
+  }catch(error){
+    res.status(500).send({message: 'Unexpected Error'})
+    return
+  }
+  res.send(investment)
+});
+
+
+// get 
+router.get("/user/:usernameid/", async (req, res) => {
+  const usernameid = req.params.usernameid
   let investment;
   try {
-    investment = await DataInvestment.find({});
+    investment = await DataInvestment.find({username:usernameid});
   } catch (error) {
     res.status(500).send({ message: "Unexpected Error" });
     return;
@@ -31,7 +46,7 @@ router.get("/investment", async (req, res) => {
 // })
 
 // show route
-router.get("/investment/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const investment = await DataInvestment.findById(id).populate("username");
   res.send(investment);
@@ -41,7 +56,7 @@ router.get("/investment/:id", async (req, res) => {
 const CRYPTO_URL=process.env.CRYPTO_URL;
 
 // show crypto current value
-router.get("/investment/crypto/:ticker/current", async (req, res) => {
+router.get("/crypto/:ticker/current", async (req, res) => {
   const { ticker } = req.params;
   const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
   const list = await listResponse.json()
@@ -54,7 +69,7 @@ router.get("/investment/crypto/:ticker/current", async (req, res) => {
 });
 
 // show stocks certain date (DD-MM-YYYY)
-router.get("/investment/crypto/:ticker/:date", async (req, res) => {
+router.get("/crypto/:ticker/:date", async (req, res) => {
   const { ticker, date } = req.params;
   const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
   const list = await listResponse.json()
@@ -71,7 +86,7 @@ const STOCKS_URL=process.env.STOCKS_URL;
 const STOCKS_KEY=process.env.STOCKS_KEY;
 
 // show stocks current value
-router.get("/investment/stocks/:ticker/current", async (req, res) => {
+router.get("/stocks/:ticker/current", async (req, res) => {
   const { ticker } = req.params;
   const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker.toUpperCase()}&token=${STOCKS_KEY}`)
   const data = await response.json()
@@ -80,7 +95,7 @@ router.get("/investment/stocks/:ticker/current", async (req, res) => {
 });
 
 // show stocks certain date (YYYY-MM-DD)
-router.get("/investment/stocks/:ticker/:date", async (req, res) => {
+router.get("/stocks/:ticker/:date", async (req, res) => {
   const { ticker, date } = req.params;
   const dateFormat = date.replace(/-/g, '/')
   const unixTime = await fetch(`https://showcase.api.linx.twenty57.net/UnixTime/tounixtimestamp?datetime=${dateFormat}`)
@@ -92,7 +107,7 @@ router.get("/investment/stocks/:ticker/:date", async (req, res) => {
 });
 
 // create route investment
-router.post("/investment", async (req, res) => {
+router.post("/", async (req, res) => {
   let createdInvestment;
   try {
     createdInvestment = await DataInvestment.create(req.body);
@@ -103,7 +118,7 @@ router.post("/investment", async (req, res) => {
   res.send(createdInvestment);
 });
 
-router.delete("/investment/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   let deletedInvestment;
   try {
     deletedInvestment = await DataInvestment.findByIdAndRemove(req.params.id);
@@ -114,7 +129,7 @@ router.delete("/investment/:id", async (req, res) => {
   res.send(deletedInvestment);
 });
 
-router.get("/investment/:id/edit", async (req, res) => {
+router.get("/:id/edit", async (req, res) => {
   let editedInvestment;
   try {
     editedInvestment = await DataInvestment.findById(req.params.id);
@@ -124,7 +139,7 @@ router.get("/investment/:id/edit", async (req, res) => {
   res.send(editedInvestment);
 });
 
-router.put("/investment/:id/edit", async (req, res) => {
+router.put("/:id/edit", async (req, res) => {
   let editedInvestment;
   try {
     editedInvestment = await DataInvestment.findByIdAndUpdate(

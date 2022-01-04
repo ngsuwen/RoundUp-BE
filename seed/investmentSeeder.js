@@ -11,7 +11,7 @@ const category = ["Crypto", "US stocks"]
 const amount = ["100", "200", "300", "400", "500", "600", "700", "800"]
 const ticker = ["TSLA", "AAPL", "AMZN", "MSFT", "GOOGL", "FB", "NVDA", "V"]
 const quantity = ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]
-
+const transaction = ["Buy", "Sell"]
 
 
 router.post("/investment/seed", async(req,res)=>{
@@ -33,7 +33,8 @@ router.post("/investment/seed", async(req,res)=>{
                                     category: category[Math.floor(Math.random() * category.length)],
                                     ticker: ticker[Math.floor(Math.random() * ticker.length)],
                                     quantity: quantity[Math.floor(Math.random() * quantity.length)],
-                                    date: currDate
+                                    date: currDate,
+                                    transaction: transaction[Math.floor(Math.random() * transaction.length)],
                                     
                                 }
   

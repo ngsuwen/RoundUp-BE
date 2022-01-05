@@ -4,7 +4,10 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const fetch = require("node-fetch");
 require('dotenv').config()
+
+// for cron job
 const cron = require('node-cron')
+const _ = require('underscore')
 
 // Schema
 const User = require("../models/user");
@@ -179,12 +182,33 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('* * * * * *', async () => {
+cron.schedule('*/5 * * * * *', async () => {
+
   try{
+      console.log('cron job activated')
+    
       investment = await DataInvestment.find({})
-      console.log('reading investment data:',investment)
+
+      // console.log('investment:',investment)
+
+      const entriesByTicker = _(investment).groupBy((element)=>{
+        return element.investmentsentry.ticker
+        })
+
+      const uniqueTickerList = Object.keys(entriesByTicker)
+
+      // console.log('uniqueTickerList:',uniqueTickerList)
+      // console.log('entriesByTicker:',entriesByTicker)
+
+      // need to fetch all prices from uniqueTickerList, store as key value pair in uniqueTickerList
+      // then for each ticker in entriesByTicker, and for each transaction in the ticker, we will have to push {date:'',price:''} into the priceHistory arr field using spread operator. 
+
+      const investmentsEntryArr = entriesByTicker['TSLA'].map((transaction,index)=>{
+        return transaction.investmentsentry})
+
+
     } catch(error){
-      console.log('error updating stock/crypto prices at close')
+      console.log('error updating stock/crypto prices at close:',error)
       return
     }
 })

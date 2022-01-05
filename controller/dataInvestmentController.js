@@ -3,7 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const fetch = require("node-fetch");
-require('dotenv').config();
+require('dotenv').config()
+const cron = require('node-cron')
 
 // Schema
 const User = require("../models/user");
@@ -152,5 +153,44 @@ router.put("/:id/edit", async (req, res) => {
   }
   res.send(editedInvestment);
 });
+
+
+//////////////////// CRON JOB //////////////////// 
+//   # ┌────────────── second (optional)
+//   # │ ┌──────────── minute
+//   # │ │ ┌────────── hour
+//   # │ │ │ ┌──────── day of month
+//   # │ │ │ │ ┌────── month
+//   # │ │ │ │ │ ┌──── day of week
+//   # │ │ │ │ │ │
+//   # │ │ │ │ │ │
+//   # * * * * * *
+
+// cron.schedule('0 16 * * * ', async () => {
+//     try{
+//         investment = await DataInvestment.find({})
+//       } catch(error){
+//         console.log('error updating stock/crypto prices at close')
+//         return
+//       }
+//   },
+//   {
+//     scheduled: true,
+//     timezone: "America/New_York"
+//   });
+
+cron.schedule('* * * * * *', async () => {
+  try{
+      investment = await DataInvestment.find({})
+      console.log('reading investment data:',investment)
+    } catch(error){
+      console.log('error updating stock/crypto prices at close')
+      return
+    }
+})
+
+// find all tickers 
+// for tickers founds, fetch all prices at closing 
+// store the prices into pricehistory field into respective ticker with date
 
 module.exports = router;

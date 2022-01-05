@@ -27,6 +27,7 @@ router.post("/investment/seed", async(req,res)=>{
                          seedItems = await DataInvestment.create({
     
                             username: await User.findOne({username: "user1" }),
+                            
                             investmentsentry:
                                 {
                                     price: price[Math.floor(Math.random() * price.length)],

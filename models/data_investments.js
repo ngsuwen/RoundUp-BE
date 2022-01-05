@@ -8,6 +8,9 @@ const dataInvestmentsSchema = new Schema({
     ref: "User",
     required: true,
   },
+  priceHistory:{
+    type: Array
+  },
   investmentsentry: 
     {
 

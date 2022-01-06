@@ -21,15 +21,18 @@ router.get("/", async(req, res) => {
     res.send(cash)
   });
 
-
-// get expense by username and monthly data 
-// router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
-//     const usernameid = req.params.usernameid
-//     const monthOfExpense = req.params.monthOfExpense
-//     const expense = await DataExpense.find({username:usernameid, 'expensesentry.date':{'$gte': new Date(`${monthOfExpense}-01`), '$lt': new Date(`${monthOfExpense}-31`)}})
-//     res.send(expense)
-// })
-
+// get cash by username and monthly data 
+router.get("/user/:usernameid/:monthOfCash", async (req,res)=>{
+    const usernameid = req.params.usernameid
+    const monthOfCash = req.params.monthOfCash
+    const monthOfCashDateObj = new Date(monthOfCash)
+    // previous month's last day 2359
+    const firstday = new Date(monthOfCashDateObj.getFullYear(), monthOfCashDateObj.getMonth(),1)
+    // current month's last day 2359
+    const lastday = new Date(monthOfCashDateObj.getFullYear(), monthOfCashDateObj.getMonth() + 1, 1)
+    const cash = await DataCash.find({username:usernameid, 'cashsentry.date':{'$gt': firstday, '$lte': lastday}})
+    res.send(cash)
+})
 
 // show route
 router.get("/:id", async (req,res)=>{

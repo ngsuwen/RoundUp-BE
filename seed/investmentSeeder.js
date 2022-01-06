@@ -11,7 +11,7 @@ const DataInvestment = require("../models/data_investments")
 const category = ["Crypto"]
 const price = ["100", "200", "300", "400", "500", "600", "700", "800"]
 // const ticker = ["TSLA", "AAPL", "AMZN", "MSFT", "GOOGL", "FB", "NVDA", "V"]
-const ticker = ["ETH", "BTC"]
+const ticker = ["ETH", "BTC", "BNB", "SOL", "USDT", "USDC"]
 const quantity = ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]
 const transaction = ["Buy", "Sell"]
 

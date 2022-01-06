@@ -182,7 +182,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('*/5 * * * * *', async () => {
+cron.schedule('*/20 * * * * *', async () => {
 
   try{
       console.log('cron job activated')
@@ -197,15 +197,62 @@ cron.schedule('*/5 * * * * *', async () => {
 
       const uniqueTickerList = Object.keys(entriesByTicker)
 
-      // console.log('uniqueTickerList:',uniqueTickerList)
+      console.log('uniqueTickerList:',uniqueTickerList)
       // console.log('entriesByTicker:',entriesByTicker)
 
+
       // need to fetch all prices from uniqueTickerList, store as key value pair in uniqueTickerList
+      let tickerAndPriceArr = []
+
+      for (let ticker of uniqueTickerList){
+
+        const priceFetcher = async () => {
+            if(entriesByTicker[ticker][0]['investmentsentry']['category']==='US stocks'){
+                const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker.toUpperCase()}&token=${STOCKS_KEY}`) 
+                const data = await response.json()
+                const stringifyData = data.c.toString()
+                const parsedStockPriceObj = {value:stringifyData}
+                parsedStockPriceObj['ticker']=ticker
+                return parsedStockPriceObj
+            }
+            
+            if(entriesByTicker[ticker][0]['investmentsentry']['category']==='Crypto'){
+                const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
+                const list = await listResponse.json()
+                const coin = list.filter(element=>element.symbol===ticker.toLowerCase())
+                console.log('coin:',coin)
+                const id = coin[0].id
+                console.log('id:',id)
+                const response = await fetch(`https://${CRYPTO_URL}/coins/${id}`)
+                const data = await response.json()
+                const parsedCryptoPriceObj = {value:data.market_data.current_price.sgd.toString()}
+                console.log('cryptoprice:',data.market_data.current_price.sgd.toString())
+                parsedCryptoPriceObj['ticker']=ticker
+                return parsedCryptoPriceObj
+            }
+        }
+
+        const fetchedPrice = await priceFetcher()
+        tickerAndPriceArr.push(fetchedPrice)
+
+        }
+
+      console.log('tickerAndPriceArr:',tickerAndPriceArr)
+
       // then for each ticker in entriesByTicker, and for each transaction in the ticker, we will have to push {date:'',price:''} into the priceHistory arr field using spread operator. 
+      // need to update mongo database
 
-      const investmentsEntryArr = entriesByTicker['TSLA'].map((transaction,index)=>{
-        return transaction.investmentsentry})
+      tickerAndPriceArr.forEach((element)=>{
+        let priceHistoryEntry={
+          'date': Date.now(),
+          'price': element.value
+        }
+        entriesByTicker[element.ticker].forEach((transaction)=>{
+          transaction.priceHistory.push(priceHistoryEntry)
+      })
+    })
 
+    console.log('updatedEntriesByTicker:',entriesByTicker['TSLA'][0].priceHistory)
 
     } catch(error){
       console.log('error updating stock/crypto prices at close:',error)

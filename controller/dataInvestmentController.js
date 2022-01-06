@@ -183,7 +183,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('*/10 * * * *', async () => {
+cron.schedule('0 */3 * * *', async () => {
 
   try{
       console.log('cron job activated')
@@ -262,7 +262,7 @@ cron.schedule('*/10 * * * *', async () => {
             // await DataInvestment.findByIdAndUpdate(
             //   transaction._id,
             //   { priceHistory: [] },
-            //   { new: true }
+            //   console.log('transactionid:',transaction._id)
             // )
 
           } catch (err) {

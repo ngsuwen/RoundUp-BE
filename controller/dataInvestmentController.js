@@ -158,7 +158,8 @@ router.put("/:id/edit", async (req, res) => {
 });
 
 
-//////////////////// CRON JOB //////////////////// 
+////////////////////////////////// START OF CRON JOB //////////////////////////// 
+
 //   # ┌────────────── second (optional)
 //   # │ ┌──────────── minute
 //   # │ │ ┌────────── hour
@@ -182,7 +183,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('*/20 * * * * *', async () => {
+cron.schedule('* * * * *', async () => {
 
   try{
       console.log('cron job activated')
@@ -225,7 +226,8 @@ cron.schedule('*/20 * * * * *', async () => {
                 console.log('id:',id)
                 const response = await fetch(`https://${CRYPTO_URL}/coins/${id}`)
                 const data = await response.json()
-                const parsedCryptoPriceObj = {value:data.market_data.current_price.sgd.toString()}
+                stringifyData = data.market_data.current_price.sgd.toString()
+                const parsedCryptoPriceObj = {value:stringifyData}
                 console.log('cryptoprice:',data.market_data.current_price.sgd.toString())
                 parsedCryptoPriceObj['ticker']=ticker
                 return parsedCryptoPriceObj
@@ -247,12 +249,29 @@ cron.schedule('*/20 * * * * *', async () => {
           'date': Date.now(),
           'price': element.value
         }
-        entriesByTicker[element.ticker].forEach((transaction)=>{
-          transaction.priceHistory.push(priceHistoryEntry)
+        entriesByTicker[element.ticker].forEach( async (transaction)=>{
+          try {
+            // updating mongoDB
+            await DataInvestment.findByIdAndUpdate(
+              transaction._id,
+              { $push: { priceHistory: priceHistoryEntry }},
+              { new: true }
+            )
+
+            // FOR RESETTING //
+            // await DataInvestment.findByIdAndUpdate(
+            //   transaction._id,
+            //   { priceHistory: [] },
+            //   { new: true }
+            // )
+
+          } catch (err) {
+            res.status(400).send({ message: "Invalid request body" });
+          }
       })
     })
 
-    console.log('updatedEntriesByTicker:',entriesByTicker['TSLA'][0].priceHistory)
+    // console.log('updatedEntriesByTicker:',entriesByTicker['TSLA'][0].priceHistory)
 
     } catch(error){
       console.log('error updating stock/crypto prices at close:',error)
@@ -260,8 +279,7 @@ cron.schedule('*/20 * * * * *', async () => {
     }
 })
 
-// find all tickers 
-// for tickers founds, fetch all prices at closing 
-// store the prices into pricehistory field into respective ticker with date
+
+////////////////////////////////// END OF CRON JOB //////////////////////////// 
 
 module.exports = router;

@@ -7,9 +7,11 @@ const router = express.Router()
 const User = require("../models/user")
 const DataInvestment = require("../models/data_investments")
 
-const category = ["Crypto", "US stocks"]
+//const category = ["Crypto", "US stocks"]
+const category = ["Crypto"]
 const price = ["100", "200", "300", "400", "500", "600", "700", "800"]
-const ticker = ["TSLA", "AAPL", "AMZN", "MSFT", "GOOGL", "FB", "NVDA", "V"]
+// const ticker = ["TSLA", "AAPL", "AMZN", "MSFT", "GOOGL", "FB", "NVDA", "V"]
+const ticker = ["ETH", "BTC"]
 const quantity = ["10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]
 const transaction = ["Buy", "Sell"]
 
@@ -23,7 +25,7 @@ router.post("/investment/seed", async(req,res)=>{
                 
                     //////////////the 1 means day. i.e, if wants to minus 3 days, change to 3
                     try {
-                         const currDate = endDate.setDate(endDate.getDate()-3) // minusing once per loop
+                         const currDate = endDate.setDate(endDate.getDate()-5) // minusing once per loop
                          seedItems = await DataInvestment.create({
     
                             username: await User.findOne({username: "user1" }),

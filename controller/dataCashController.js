@@ -30,7 +30,7 @@ router.get("/user/:usernameid/:monthOfCash", async (req,res)=>{
     const firstday = new Date(monthOfCashDateObj.getFullYear(), monthOfCashDateObj.getMonth(),1)
     // current month's last day 2359
     const lastday = new Date(monthOfCashDateObj.getFullYear(), monthOfCashDateObj.getMonth() + 1, 1)
-    const cash = await DataCash.find({username:usernameid, 'cashsentry.date':{'$gt': firstday, '$lte': lastday}})
+    const cash = await DataCash.find({username:usernameid, 'cashentry.date':{'$gt': firstday, '$lte': lastday}})
     res.send(cash)
 })
 

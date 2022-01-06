@@ -183,7 +183,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('*/30 * * * *', async () => {
 
   try{
       console.log('cron job activated')

@@ -183,7 +183,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('0 */3 * * *', async () => {
+cron.schedule('*/1 * * * *', async () => {
 
   try{
       console.log('cron job activated')
@@ -201,38 +201,59 @@ cron.schedule('0 */3 * * *', async () => {
       console.log('uniqueTickerList:',uniqueTickerList)
       // console.log('entriesByTicker:',entriesByTicker)
 
+      // calculate total qty of stocks/crypto
+      for (let ticker of uniqueTickerList){
+      let totalQuantity = 0 
+      entriesByTicker[ticker].map((transaction)=>{
+        totalQuantity += transaction['investmentsentry']['quantity']
+      })
+      console.log(`Quantity of ${ticker}:${totalQuantity}`)  
+      } 
 
       // need to fetch all prices from uniqueTickerList, store as key value pair in uniqueTickerList
       let tickerAndPriceArr = []
 
       for (let ticker of uniqueTickerList){
 
-        const priceFetcher = async () => {
-            if(entriesByTicker[ticker][0]['investmentsentry']['category']==='US stocks'){
-                const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker.toUpperCase()}&token=${STOCKS_KEY}`) 
-                const data = await response.json()
-                const stringifyData = data.c.toString()
-                const parsedStockPriceObj = {value:stringifyData}
-                parsedStockPriceObj['ticker']=ticker
-                return parsedStockPriceObj
-            }
-            
-            if(entriesByTicker[ticker][0]['investmentsentry']['category']==='Crypto'){
-                const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
-                const list = await listResponse.json()
-                const coin = list.filter(element=>element.symbol===ticker.toLowerCase())
-                console.log('coin:',coin)
-                const id = coin[0].id
-                console.log('id:',id)
-                const response = await fetch(`https://${CRYPTO_URL}/coins/${id}`)
-                const data = await response.json()
-                stringifyData = data.market_data.current_price.sgd.toString()
-                const parsedCryptoPriceObj = {value:stringifyData}
-                console.log('cryptoprice:',data.market_data.current_price.sgd.toString())
-                parsedCryptoPriceObj['ticker']=ticker
-                return parsedCryptoPriceObj
-            }
-        }
+      const priceFetcher = async () => {
+
+      // calculate total qty of stocks/crypto
+      let totalQuantity = 0 
+      entriesByTicker[ticker].map((transaction)=>{
+      totalQuantity += transaction['investmentsentry']['quantity']
+      })
+      console.log(`Quantity of ${ticker}:${totalQuantity}`)  
+  
+
+      if(entriesByTicker[ticker][0]['investmentsentry']['category']==='US stocks'){
+          const response = await fetch(`https://${STOCKS_URL}/quote?symbol=${ticker.toUpperCase()}&token=${STOCKS_KEY}`) 
+          const data = await response.json()
+          const stringifyData = data.c.toString()
+          const parsedStockPriceObj = {value:stringifyData}
+          parsedStockPriceObj['ticker']=ticker
+          parsedStockPriceObj['quantity']=totalQuantity
+          console.log('parsedStockPriceObj:',parsedStockPriceObj)
+          return parsedStockPriceObj
+      }
+  
+      if(entriesByTicker[ticker][0]['investmentsentry']['category']==='Crypto'){
+          const listResponse = await fetch(`https://${CRYPTO_URL}/coins/list`)
+          const list = await listResponse.json()
+          const coin = list.filter(element=>element.symbol===ticker.toLowerCase())
+          console.log('coin:',coin)
+          const id = coin[0].id
+          console.log('id:',id)
+          const response = await fetch(`https://${CRYPTO_URL}/coins/${id}`)
+          const data = await response.json()
+          stringifyData = data.market_data.current_price.sgd.toString()
+          const parsedCryptoPriceObj = {value:stringifyData}
+          console.log('cryptoprice:',data.market_data.current_price.sgd.toString())
+          parsedCryptoPriceObj['ticker']=ticker
+          parsedCryptoPriceObj['quantity']=totalQuantity
+          console.log('parsedCryptoPriceObj:',parsedCryptoPriceObj)
+          return parsedCryptoPriceObj
+          }
+      }
 
         const fetchedPrice = await priceFetcher()
         tickerAndPriceArr.push(fetchedPrice)
@@ -247,7 +268,8 @@ cron.schedule('0 */3 * * *', async () => {
       tickerAndPriceArr.forEach((element)=>{
         let priceHistoryEntry={
           'date': Date.now(),
-          'price': element.value
+          'price': element.value,
+          'quantity': element.quantity,
         }
         entriesByTicker[element.ticker].forEach( async (transaction)=>{
           try {

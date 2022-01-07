@@ -183,7 +183,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
 
   try{
       console.log('cron job activated')
@@ -198,17 +198,8 @@ cron.schedule('*/1 * * * *', async () => {
 
       const uniqueTickerList = Object.keys(entriesByTicker)
 
-      console.log('uniqueTickerList:',uniqueTickerList)
+      // console.log('uniqueTickerList:',uniqueTickerList)
       // console.log('entriesByTicker:',entriesByTicker)
-
-      // calculate total qty of stocks/crypto
-      for (let ticker of uniqueTickerList){
-      let totalQuantity = 0 
-      entriesByTicker[ticker].map((transaction)=>{
-        totalQuantity += transaction['investmentsentry']['quantity']
-      })
-      console.log(`Quantity of ${ticker}:${totalQuantity}`)  
-      } 
 
       // need to fetch all prices from uniqueTickerList, store as key value pair in uniqueTickerList
       let tickerAndPriceArr = []
@@ -222,7 +213,7 @@ cron.schedule('*/1 * * * *', async () => {
       entriesByTicker[ticker].map((transaction)=>{
       totalQuantity += transaction['investmentsentry']['quantity']
       })
-      console.log(`Quantity of ${ticker}:${totalQuantity}`)  
+      // console.log(`Quantity of ${ticker}:${totalQuantity}`)  
   
 
       if(entriesByTicker[ticker][0]['investmentsentry']['category']==='US stocks'){
@@ -232,7 +223,7 @@ cron.schedule('*/1 * * * *', async () => {
           const parsedStockPriceObj = {value:stringifyData}
           parsedStockPriceObj['ticker']=ticker
           parsedStockPriceObj['quantity']=totalQuantity
-          console.log('parsedStockPriceObj:',parsedStockPriceObj)
+          // console.log('parsedStockPriceObj:',parsedStockPriceObj)
           return parsedStockPriceObj
       }
   
@@ -250,7 +241,7 @@ cron.schedule('*/1 * * * *', async () => {
           console.log('cryptoprice:',data.market_data.current_price.sgd.toString())
           parsedCryptoPriceObj['ticker']=ticker
           parsedCryptoPriceObj['quantity']=totalQuantity
-          console.log('parsedCryptoPriceObj:',parsedCryptoPriceObj)
+          // console.log('parsedCryptoPriceObj:',parsedCryptoPriceObj)
           return parsedCryptoPriceObj
           }
       }

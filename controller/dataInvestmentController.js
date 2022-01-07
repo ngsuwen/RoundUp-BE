@@ -183,7 +183,7 @@ router.put("/:id/edit", async (req, res) => {
 //     timezone: "America/New_York"
 //   });
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('0 16 * * * ', async () => {
 
   try{
       console.log('cron job activated')
@@ -290,7 +290,12 @@ cron.schedule('0 * * * *', async () => {
       console.log('error updating stock/crypto prices at close:',error)
       return
     }
-})
+},
+  {
+      scheduled: true,
+      timezone: "America/New_York"
+  }
+)
 
 
 ////////////////////////////////// END OF CRON JOB //////////////////////////// 

@@ -92,8 +92,8 @@ const STOCKS_KEY=process.env.STOCKS_KEY;
 // get crypto for ticker
 router.get("/crypto/all", async(req,res)=>{
   const res = await fetch (`https://${CRYPTO_URL}/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=300&page=1&sparkline=false`)
-  const data = res.json()
-  res.send(data)
+  //const data = res.json()
+  res.send(res)
 })
 
 // show stocks current value

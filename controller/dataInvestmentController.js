@@ -6,6 +6,9 @@ const fetch = require("node-fetch");
 var timeout = require('connect-timeout');
 require('dotenv').config()
 
+router.use(timeout(120000));
+router.use(haltOnTimedout);
+
 // for cron job
 const cron = require('node-cron')
 const _ = require('underscore')
@@ -307,7 +310,7 @@ cron.schedule('0 16 * * * ', async () => {
 
 ////////////////////////////////// END OF CRON JOB //////////////////////////// 
 
-// get Investment by username and yearly data (part1)
+// get Investment by username and yearly data
 // YYYY-MM
 router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
   const usernameid = req.params.usernameid;
@@ -315,92 +318,8 @@ router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
   const monthOfInvestmentDateObj = new Date(monthOfInvestment);
   let investmentArr = [];
   let tickersArr = await DataInvestment.distinct('investmentsentry.ticker')
-  // console.log(tickersArr)
-  for (let i = 1; i <= 4; i++) {
-    let monthlyInvestment = 0;
-    // last day of month
-    let lastday = new Date(
-      monthOfInvestmentDateObj.getFullYear() - 1,
-      monthOfInvestmentDateObj.getMonth() + i + 1,
-      1
-    );
-    for (let ticker of tickersArr){
-      // find latest entry for each ticker
-      const investment = await DataInvestment.find({
-        username: usernameid,
-        "investmentsentry.ticker": ticker,
-        "investmentsentry.date": { $lte: lastday },
-      }).sort({"investmentsentry.date":-1}).limit(1)
-      if (investment.length==0){
-        monthlyInvestment += 0
-      } else {
-        if (i!=12){
-          indexFound = investment[0].priceHistory.findIndex(element=>element.date==lastday.getTime()/1000)
-          monthlyInvestment += Number(investment[0].priceHistory[indexFound].price) * Number(investment[0].priceHistory[indexFound].quantity);
-          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
-        } else {
-          monthlyInvestment += Number(investment[0].priceHistory[investment[0].priceHistory.length-1].price) * Number(investment[0].priceHistory[investment[0].priceHistory.length-1].quantity);
-          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
-        }
-      }
-    }
-    investmentArr.push(monthlyInvestment.toFixed(2));
-  }
-  res.send(investmentArr);
-});
-
-// get Investment by username and yearly data (part2)
-// YYYY-MM
-router.get("/user/:usernameid/yearly2/:monthOfInvestment", async (req, res) => {
-  const usernameid = req.params.usernameid;
-  const monthOfInvestment = req.params.monthOfInvestment;
-  const monthOfInvestmentDateObj = new Date(monthOfInvestment);
-  let investmentArr = [];
-  let tickersArr = await DataInvestment.distinct('investmentsentry.ticker')
-  // console.log(tickersArr)
-  for (let i = 5; i <= 8; i++) {
-    let monthlyInvestment = 0;
-    // last day of month
-    let lastday = new Date(
-      monthOfInvestmentDateObj.getFullYear() - 1,
-      monthOfInvestmentDateObj.getMonth() + i + 1,
-      1
-    );
-    for (let ticker of tickersArr){
-      // find latest entry for each ticker
-      const investment = await DataInvestment.find({
-        username: usernameid,
-        "investmentsentry.ticker": ticker,
-        "investmentsentry.date": { $lte: lastday },
-      }).sort({"investmentsentry.date":-1}).limit(1)
-      if (investment.length==0){
-        monthlyInvestment += 0
-      } else {
-        if (i!=12){
-          indexFound = investment[0].priceHistory.findIndex(element=>element.date==lastday.getTime()/1000)
-          monthlyInvestment += Number(investment[0].priceHistory[indexFound].price) * Number(investment[0].priceHistory[indexFound].quantity);
-          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
-        } else {
-          monthlyInvestment += Number(investment[0].priceHistory[investment[0].priceHistory.length-1].price) * Number(investment[0].priceHistory[investment[0].priceHistory.length-1].quantity);
-          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
-        }
-      }
-    }
-    investmentArr.push(monthlyInvestment.toFixed(2));
-  }
-  res.send(investmentArr);
-});
-
-// get Investment by username and yearly data (part3)
-// YYYY-MM
-router.get("/user/:usernameid/yearly3/:monthOfInvestment", timeout('60s'), haltOnTimedout, async (req, res) => {
-  const usernameid = req.params.usernameid;
-  const monthOfInvestment = req.params.monthOfInvestment;
-  const monthOfInvestmentDateObj = new Date(monthOfInvestment);
-  let investmentArr = [];
-  let tickersArr = await DataInvestment.distinct('investmentsentry.ticker')
-  // console.log(tickersArr)
-  for (let i = 9; i <= 12; i++) {
+  console.log(tickersArr)
+  for (let i = 1; i <= 12; i++) {
     let monthlyInvestment = 0;
     // last day of month
     let lastday = new Date(

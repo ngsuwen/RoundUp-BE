@@ -41,12 +41,12 @@ router.get("/user/:usernameid/", async (req, res) => {
   res.send(investment);
 });
 
-// get expense by username and monthly data
-// router.get("/expense/user/:usernameid/:monthOfExpense", async (req,res)=>{
+// get Investment by username and monthly data
+// router.get("/Investment/user/:usernameid/:monthOfInvestment", async (req,res)=>{
 //     const usernameid = req.params.usernameid
-//     const monthOfExpense = req.params.monthOfExpense
-//     const expense = await DataExpense.find({username:usernameid, 'expensesentry.date':{'$gte': new Date(`${monthOfExpense}-01`), '$lte': new Date(`${monthOfExpense}-31`)}})
-//     res.send(expense)
+//     const monthOfInvestment = req.params.monthOfInvestment
+//     const Investment = await DataInvestment.find({username:usernameid, 'Investmentsentry.date':{'$gte': new Date(`${monthOfInvestment}-01`), '$lte': new Date(`${monthOfInvestment}-31`)}})
+//     res.send(Investment)
 // })
 
 // show route
@@ -297,6 +297,40 @@ cron.schedule('0 16 * * * ', async () => {
   }
 )
 
+// get Investment by username and yearly data
+// YYYY-MM
+router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
+  const usernameid = req.params.usernameid;
+  const monthOfInvestment = req.params.monthOfInvestment;
+  const monthOfInvestmentDateObj = new Date(monthOfInvestment);
+  let investmentArr = [];
+  let tickersArr = await DataInvestment.distinct('investmentsentry.ticker')
+  // console.log(tickersArr)
+  for (let i = 1; i <= 12; i++) {
+    let monthlyInvestment = 0;
+    // last day of month
+    let lastday = new Date(
+      monthOfInvestmentDateObj.getFullYear() - 1,
+      monthOfInvestmentDateObj.getMonth() + i + 1,
+      1
+    );
+    for (let ticker of tickersArr){
+      // find latest entry for each ticker
+      const investment = await DataInvestment.find({
+        username: usernameid,
+        "investmentsentry.ticker": ticker,
+        "investmentsentry.date": { $lte: lastday },
+      }).sort({"investmentsentry.date":-1}).limit(1)
+      if (investment.length==0){
+        monthlyInvestment += 0
+      } else {
+        monthlyInvestment += investment[0].priceHistory[investment[0].priceHistory.length-1].price * investment[0].priceHistory[investment[0].priceHistory.length-1].quantity;
+      }
+    }
+    investmentArr.push(monthlyInvestment.toFixed(2));
+  }
+  res.send(investmentArr);
+});
 
 ////////////////////////////////// END OF CRON JOB //////////////////////////// 
 

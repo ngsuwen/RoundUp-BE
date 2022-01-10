@@ -324,7 +324,14 @@ router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
       if (investment.length==0){
         monthlyInvestment += 0
       } else {
-        monthlyInvestment += investment[0].priceHistory[investment[0].priceHistory.length-1].price * investment[0].priceHistory[investment[0].priceHistory.length-1].quantity;
+        if (i!=12){
+          indexFound = investment[0].priceHistory.findIndex(element=>element.date==lastday.getTime()/1000)
+          monthlyInvestment += Number(investment[0].priceHistory[indexFound].price) * Number(investment[0].priceHistory[indexFound].quantity);
+          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
+        } else {
+          monthlyInvestment += Number(investment[0].priceHistory[investment[0].priceHistory.length-1].price) * Number(investment[0].priceHistory[investment[0].priceHistory.length-1].quantity);
+          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
+        }
       }
     }
     investmentArr.push(monthlyInvestment.toFixed(2));

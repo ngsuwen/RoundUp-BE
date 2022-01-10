@@ -91,8 +91,8 @@ const STOCKS_KEY=process.env.STOCKS_KEY;
 
 // get crypto for ticker
 router.get("/crypto/all", async(req,res)=>{
-  const res = await fetch (`https://${CRYPTO_URL}/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=300&page=1&sparkline=false`)
-  const data = res.json()
+  const response = await fetch (`https://${CRYPTO_URL}/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=300&page=1&sparkline=false`)
+  const data = response.json()
   res.send(data)
 })
 
@@ -392,7 +392,7 @@ router.get("/user/:usernameid/yearly2/:monthOfInvestment", async (req, res) => {
 
 // get Investment by username and yearly data (part3)
 // YYYY-MM
-router.get("/user/:usernameid/yearly4/:monthOfInvestment", async (req, res) => {
+router.get("/user/:usernameid/yearly3/:monthOfInvestment", async (req, res) => {
   const usernameid = req.params.usernameid;
   const monthOfInvestment = req.params.monthOfInvestment;
   const monthOfInvestmentDateObj = new Date(monthOfInvestment);

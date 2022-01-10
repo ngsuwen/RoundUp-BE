@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const fetch = require("node-fetch");
+var timeout = require('connect-timeout');
 require('dotenv').config()
 
 // for cron job
@@ -392,7 +393,7 @@ router.get("/user/:usernameid/yearly2/:monthOfInvestment", async (req, res) => {
 
 // get Investment by username and yearly data (part3)
 // YYYY-MM
-router.get("/user/:usernameid/yearly3/:monthOfInvestment", async (req, res) => {
+router.get("/user/:usernameid/yearly3/:monthOfInvestment", timeout('60s'), haltOnTimedout, async (req, res) => {
   const usernameid = req.params.usernameid;
   const monthOfInvestment = req.params.monthOfInvestment;
   const monthOfInvestmentDateObj = new Date(monthOfInvestment);
@@ -431,5 +432,9 @@ router.get("/user/:usernameid/yearly3/:monthOfInvestment", async (req, res) => {
   }
   res.send(investmentArr);
 });
+
+function haltOnTimedout (req, res, next) {
+  if (!req.timedout) next()
+}
 
 module.exports = router;

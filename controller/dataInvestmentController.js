@@ -318,7 +318,7 @@ const yearlyInvestment=async(usernameid, monthOfInvestment, monthOfInvestmentDat
   let tickersArr = await DataInvestment.distinct('investmentsentry.ticker')
   // console.log(tickersArr)
   for (let i = start; i <= end; i++) {
-    let monthlyInvestment = 0;
+    let monthlyInvestment = [];
     // last day of month
     let lastday = new Date(
       monthOfInvestmentDateObj.getFullYear() - 1,
@@ -332,20 +332,9 @@ const yearlyInvestment=async(usernameid, monthOfInvestment, monthOfInvestmentDat
         "investmentsentry.ticker": ticker,
         "investmentsentry.date": { $lte: lastday },
       }).sort({"investmentsentry.date":-1}).limit(1)
-      if (investment.length==0){
-        monthlyInvestment += 0
-      } else {
-        if (i!=12){
-          indexFound = investment[0].priceHistory.findIndex(element=>element.date==lastday.getTime()/1000)
-          monthlyInvestment += Number(investment[0].priceHistory[indexFound].price) * Number(investment[0].priceHistory[indexFound].quantity);
-          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
-        } else {
-          monthlyInvestment += Number(investment[0].priceHistory[investment[0].priceHistory.length-1].price) * Number(investment[0].priceHistory[investment[0].priceHistory.length-1].quantity);
-          //console.log(indexFound, lastday.getTime()/1000, investment[0]._id)
-        }
-      }
+      monthlyInvestment.push(investment[0])
     }
-    investmentArr.push(monthlyInvestment.toFixed(2));
+    investmentArr.push(monthlyInvestment);
   }
   return investmentArr
 }

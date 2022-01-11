@@ -349,13 +349,23 @@ const yearlyInvestment=async(usernameid, monthOfInvestment, monthOfInvestmentDat
   }
   return investmentArr
 }
-// get Investment by username and yearly data
+// get Investment by username and yearly data part1
 // YYYY-MM
 router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
   const usernameid = req.params.usernameid;
   const monthOfInvestment = req.params.monthOfInvestment;
   const monthOfInvestmentDateObj = new Date(monthOfInvestment);
-  const investmentArr = await yearlyInvestment(usernameid, monthOfInvestment, monthOfInvestmentDateObj, 1, 12);
+  const investmentArr = await yearlyInvestment(usernameid, monthOfInvestment, monthOfInvestmentDateObj, 1, 6);
+  res.send(investmentArr);
+});
+
+// get Investment by username and yearly data part2
+// YYYY-MM
+router.get("/user/:usernameid/yearly2/:monthOfInvestment", async (req, res) => {
+  const usernameid = req.params.usernameid;
+  const monthOfInvestment = req.params.monthOfInvestment;
+  const monthOfInvestmentDateObj = new Date(monthOfInvestment);
+  const investmentArr = await yearlyInvestment(usernameid, monthOfInvestment, monthOfInvestmentDateObj, 7, 12);
   res.send(investmentArr);
 });
 

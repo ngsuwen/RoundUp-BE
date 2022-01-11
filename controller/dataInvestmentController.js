@@ -355,7 +355,7 @@ router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
   const usernameid = req.params.usernameid;
   const monthOfInvestment = req.params.monthOfInvestment;
   const monthOfInvestmentDateObj = new Date(monthOfInvestment);
-  const investmentArr = await yearlyInvestment(usernameid, monthOfInvestment, monthOfInvestmentDateObj, 1, 6);
+  const investmentArr = await yearlyInvestment(usernameid, monthOfInvestment, monthOfInvestmentDateObj, 1, 12);
   res.send(investmentArr);
 });
 

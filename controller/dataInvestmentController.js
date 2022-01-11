@@ -3,11 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const fetch = require("node-fetch");
-var timeout = require('connect-timeout');
 require('dotenv').config()
-
-router.use(timeout(120000));
-router.use(haltOnTimedout);
 
 // for cron job
 const cron = require('node-cron')
@@ -317,16 +313,11 @@ cron.schedule('0 16 * * * ', async () => {
 
 ////////////////////////////////// END OF CRON JOB //////////////////////////// 
 
-// get Investment by username and yearly data
-// YYYY-MM
-router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
-  const usernameid = req.params.usernameid;
-  const monthOfInvestment = req.params.monthOfInvestment;
-  const monthOfInvestmentDateObj = new Date(monthOfInvestment);
+const yearlyInvestment=async(usernameid, monthOfInvestment, monthOfInvestmentDateObj, start, end)=>{
   let investmentArr = [];
   let tickersArr = await DataInvestment.distinct('investmentsentry.ticker')
-  console.log(tickersArr)
-  for (let i = 1; i <= 12; i++) {
+  // console.log(tickersArr)
+  for (let i = start; i <= end; i++) {
     let monthlyInvestment = 0;
     // last day of month
     let lastday = new Date(
@@ -356,11 +347,16 @@ router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
     }
     investmentArr.push(monthlyInvestment.toFixed(2));
   }
+  return investmentArr
+}
+// get Investment by username and yearly data
+// YYYY-MM
+router.get("/user/:usernameid/yearly/:monthOfInvestment", async (req, res) => {
+  const usernameid = req.params.usernameid;
+  const monthOfInvestment = req.params.monthOfInvestment;
+  const monthOfInvestmentDateObj = new Date(monthOfInvestment);
+  const investmentArr = await yearlyInvestment(usernameid, monthOfInvestment, monthOfInvestmentDateObj, 1, 3);
   res.send(investmentArr);
 });
-
-function haltOnTimedout (req, res, next) {
-  if (!req.timedout) next()
-}
 
 module.exports = router;
